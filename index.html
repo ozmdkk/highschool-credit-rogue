@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>고교학점제 로그 (High School Credit PokéRogue)</title>
+  <meta name="description" content="중학생을 위한 2022 개정 교육과정 및 고교학점제 체험 포켓로그 RPG 게임">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main id="game-container">
+    <!-- 레트로 CRT 스캔라인 효과 -->
+    <div class="scanlines"></div>
+
+    <!-- 상단 글로벌 상태 바 (Wave, 학년, 학점 진척도) -->
+    <header class="game-header intro-mode" id="main-header">
+      <div class="header-left">
+        <span class="wave-badge" id="wave-indicator" style="display:none;">Wave 1 / 48</span>
+        <span class="year-title" id="year-semester-title">🏫 신입생 진로 오리엔테이션</span>
+      </div>
+      <div class="header-right">
+        <div class="credit-tracker" id="header-credit-tracker" style="display:none;">
+          <div class="credit-label-row">
+            <span>🎓 이수 학점:</span>
+            <span id="credit-count-text">0 / 192</span>
+          </div>
+          <div class="credit-progress-wrap">
+            <div class="credit-progress-bar" id="credit-progress-bar"></div>
+          </div>
+        </div>
+        <button class="sound-toggle-btn" id="btn-sound-toggle" title="사운드 ON/OFF">🔊</button>
+      </div>
+    </header>
+
+    <!-- 1. 진학부장 오리엔테이션 & 스타팅 진로 선택 뷰 -->
+    <section class="game-view active" id="view-title">
+      <div class="title-top-bar">
+        <h1>고교학점제 로그</h1>
+        <p>🎮 2022 개정 교육과정 4대 교과 속성 & 192학점 완주 프로젝트</p>
+      </div>
+
+      <!-- 진학지도부장 오기준 선생님 면담 카드 -->
+      <div class="mentor-dialog-container" id="mentor-dialog-container">
+        <div class="mentor-avatar-wrap">
+          <div class="mentor-sprite">🧑‍🏫</div>
+          <span class="mentor-name-badge">진학부장 오기준 선생님</span>
+        </div>
+        <div class="mentor-speech-content">
+          <div class="mentor-speech-bubble" id="mentor-speech-bubble">
+            "고등학교 입학을 진심으로 축하한다! 🎉 나는 너의 3년 고교생활과 192학점 설계를 함께할 진학지도부장 오기준 선생님이란다."
+          </div>
+          <div class="mentor-action-row">
+            <button class="btn-dialog-next" id="btn-dialog-next">다음 이야기 💬 ➡️</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4대 진로 트랙 선택 그리드 영역 (단계별 표시) -->
+      <div class="track-selection-wrapper" id="track-selection-wrapper" style="display:none;">
+        <div class="track-selection-title">👇 3년 동안 탐구할 나의 희망 진로 트랙(스타팅 속성)을 선택하세요:</div>
+        <div class="track-cards-grid" id="track-cards-grid">
+          <!-- JS 동적 생성 -->
+        </div>
+      </div>
+
+      <button class="btn-game-start" id="btn-start-game" style="display:none;" disabled>
+        🎒 시간표를 받고 1학년 1학기 첫 수업으로 등교하기! 🚀
+      </button>
+    </section>
+
+    <!-- 2. 포켓로그 배틀 뷰 (16:9 가로 대전 경기장) -->
+    <section class="game-view" id="view-battle">
+      <div class="battle-field" id="battle-field">
+        <!-- 적 (과목/보스 몬스터) -->
+        <div class="enemy-unit-row">
+          <div class="unit-status-box" id="enemy-status-box">
+            <div class="unit-name-row">
+              <span class="unit-name">
+                <span id="enemy-name">공통국어</span>
+                <span class="element-tag-badge" id="enemy-element-badge">🟨 인문·사회</span>
+              </span>
+              <span class="unit-type-tag" id="enemy-type-badge">공통과목</span>
+            </div>
+            <div class="hp-bar-container">
+              <span class="hp-label">HP</span>
+              <div class="hp-bar-outer">
+                <div class="hp-bar-inner" id="enemy-hp-bar"></div>
+              </div>
+              <span style="font-size:0.68rem; font-weight:700; color:#cbd5e1;" id="enemy-hp-text">240/240</span>
+            </div>
+          </div>
+          <!-- 적 배틀 발판 -->
+          <div class="battle-platform">
+            <div class="unit-sprite-wrap" id="enemy-sprite">📖</div>
+          </div>
+        </div>
+
+        <!-- 플레이어 (학생 & 머리 위 4대 역량 스탯 바) -->
+        <div class="player-unit-row">
+          <div class="player-avatar-container" id="player-avatar-container">
+            <!-- 머리 위 플로팅 4대 스탯 바 -->
+            <div class="floating-stat-bar" id="floating-stat-bar">
+              <div class="head-stat-item academic" title="학업역량: 퀴즈 데미지 증가">
+                <span>📚</span><span id="stat-val-academic">25</span>
+              </div>
+              <div class="head-stat-item career" title="진로역량: 진로 과목 크리티컬">
+                <span>🎯</span><span id="stat-val-career">30</span>
+              </div>
+              <div class="head-stat-item self" title="자기주도역량: 턴당 멘탈 회복 & 방어">
+                <span>⚡</span><span id="stat-val-self">20</span>
+              </div>
+              <div class="head-stat-item comm" title="공동체역량: 이벤트 특별 선택지 & 멘토링">
+                <span>🤝</span><span id="stat-val-comm">15</span>
+              </div>
+
+              <!-- 마우스 호버 상세 툴팁 -->
+              <div class="stat-tooltip">
+                <div class="stat-tooltip-row"><strong style="color:var(--stat-academic);">📚 학업역량:</strong> <span id="tip-academic">퀴즈 데미지 +25%</span></div>
+                <div class="stat-tooltip-row"><strong style="color:var(--stat-career);">🎯 진로역량:</strong> <span id="tip-career">진로 크리티컬 확률 30%</span></div>
+                <div class="stat-tooltip-row"><strong style="color:var(--stat-self);">⚡ 자기주도:</strong> <span id="tip-self">턴당 멘탈 회복 +4</span></div>
+                <div class="stat-tooltip-row"><strong style="color:var(--stat-comm);">🤝 공동체:</strong> <span id="tip-comm">이벤트 해금 & 멘토링 찬스</span></div>
+              </div>
+            </div>
+
+            <!-- 플레이어 배틀 발판 & 아바타 -->
+            <div class="battle-platform">
+              <div class="player-sprite-wrap" id="player-sprite">🧑‍🎓</div>
+            </div>
+          </div>
+
+          <!-- 플레이어 멘탈(HP) 상태창 -->
+          <div class="unit-status-box" id="player-status-box">
+            <div class="unit-name-row">
+              <span class="unit-name">
+                <span id="player-name">나 (고1)</span>
+                <span class="element-tag-badge" id="player-element-badge">🟦 수리·논리</span>
+              </span>
+              <span class="unit-type-tag" id="player-track-badge" style="background:#3b82f6;">AI·SW</span>
+            </div>
+            <div class="hp-bar-container">
+              <span class="hp-label">멘탈</span>
+              <div class="hp-bar-outer">
+                <div class="hp-bar-inner" id="player-hp-bar"></div>
+              </div>
+              <span style="font-size:0.68rem; font-weight:700; color:#cbd5e1;" id="player-hp-text">100/100</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 전투 대화창 -->
+      <div class="battle-dialog-box">
+        <p class="dialog-text" id="battle-dialog-text">야생의 과목이 나타났다!</p>
+      </div>
+
+      <!-- 하단 4대 전략 배틀 액션 패널 -->
+      <div class="battle-action-panel">
+        <div class="action-buttons-grid">
+          <button class="btn-action btn-attack" id="btn-act-quiz">
+            <span>⚔️ 개념 퀴즈 공격</span>
+            <span style="font-size:0.65rem; color:#fca5a5;">(데미지)</span>
+          </button>
+          <button class="btn-action btn-skill" id="btn-act-skill">
+            <span>🔥 심화 탐구 스킬</span>
+            <span style="font-size:0.65rem; color:#c084fc;" id="skill-cd-text">(준비)</span>
+          </button>
+          <button class="btn-action btn-guard" id="btn-act-guard">
+            <span>🛡️ 오답노트 방어</span>
+            <span style="font-size:0.65rem; color:#fde68a;">(-60%&회복)</span>
+          </button>
+          <button class="btn-action btn-mentor" id="btn-act-mentor">
+            <span>🤝 친구 멘토링 (<span id="mentor-count-text">2</span>회)</span>
+            <span style="font-size:0.65rem; color:#6ee7b7;">(50:50)</span>
+          </button>
+        </div>
+
+        <div class="side-info-panel">
+          <div class="side-info-row">
+            <span>현재 턴:</span>
+            <span class="side-info-val" id="info-battle-turn">Turn 1</span>
+          </div>
+          <div class="side-info-row">
+            <span>상성 판정:</span>
+            <span class="side-info-val" id="info-matchup-eval" style="color:var(--gold);">보통 (1.0x)</span>
+          </div>
+          <div class="side-info-row">
+            <button id="btn-act-deck" style="background:#334155; border:none; color:#fff; padding:2px 6px; border-radius:4px; font-size:0.68rem; font-weight:700; cursor:pointer; width:100%; margin-top:2px;">
+              📋 나의 시간표 도감
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 웨이브 클리어 보상 선택 뷰 (3택 1) -->
+    <section class="game-view" id="view-reward">
+      <h2 class="reward-title">🎉 과목 이수 완료! 보상 선택</h2>
+      <p class="reward-sub">나의 4대 역량을 성장시키고 고교 생활을 강화할 카드 1장을 선택하세요.</p>
+
+      <div class="reward-cards-row" id="reward-cards-container">
+        <!-- JS 동적 생성 -->
+      </div>
+    </section>
+
+    <!-- 4. 학교생활 딜레마 이벤트 뷰 -->
+    <section class="game-view" id="view-event">
+      <div class="event-box">
+        <span class="event-tag" id="event-tag">🏫 고교생활 돌발 이벤트</span>
+        <h2 class="event-title" id="event-title">과목 선택의 갈림길!</h2>
+        <p class="event-desc" id="event-desc">
+          수강신청 시즌이다! 친구가 편한 과목을 같이 듣자고 제안하지만...
+        </p>
+
+        <div class="event-choices-list" id="event-choices-list">
+          <!-- JS 동적 생성 -->
+        </div>
+
+        <div class="event-result-box" id="event-result-box">
+          <!-- 결과 피드백 텍스트 -->
+        </div>
+        <button class="btn-action" id="btn-event-next" style="display:none; align-self: flex-end; background:#3b82f6; margin-top:6px;">
+          다음 웨이브로 진행 ➡️
+        </button>
+      </div>
+    </section>
+
+    <!-- 5. 최종 졸업 & 멀티엔딩 뷰 -->
+    <section class="game-view" id="view-ending">
+      <div class="ending-card-wrap">
+        <span class="ending-badge" id="ending-badge">🏆 최우수 졸업장</span>
+        <h1 class="ending-title" id="ending-title">미래를 코딩하는 AI 혁신가</h1>
+        
+        <div class="ending-summary-box">
+          <p id="ending-summary-text"></p>
+          <hr style="border:0; border-top:1px solid #334155; margin:8px 0;">
+          <p style="color:#60a5fa; font-weight:700;" id="ending-next-step"></p>
+        </div>
+
+        <div class="ending-stats-grid">
+          <div class="ending-stat-box">
+            <div class="stat-item-label">📚 학업역량</div>
+            <div class="stat-item-val" style="color:var(--stat-academic);" id="end-stat-academic">0</div>
+          </div>
+          <div class="ending-stat-box">
+            <div class="stat-item-label">🎯 진로역량</div>
+            <div class="stat-item-val" style="color:var(--stat-career);" id="end-stat-career">0</div>
+          </div>
+          <div class="ending-stat-box">
+            <div class="stat-item-label">⚡ 자기주도역량</div>
+            <div class="stat-item-val" style="color:var(--stat-self);" id="end-stat-self">0</div>
+          </div>
+          <div class="ending-stat-box">
+            <div class="stat-item-label">🤝 공동체역량</div>
+            <div class="stat-item-val" style="color:var(--stat-comm);" id="end-stat-comm">0</div>
+          </div>
+        </div>
+
+        <div class="ending-btn-row">
+          <button class="btn-restart" id="btn-restart-game">🔄 새로운 진로로 다시 도전하기</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 모달: 긴급 경고/알림 모달 (보장지도 발동 등) -->
+    <div class="notice-overlay" id="notice-overlay">
+      <div class="notice-modal-box">
+        <div class="notice-title-row">
+          <span class="notice-icon">⚠️</span>
+          <h3 class="notice-title" id="notice-title">최소성취수준 미도달 위기 경보!</h3>
+        </div>
+        <div class="notice-body" id="notice-body">
+          멘탈(HP)이 0이 되어 [최소성취수준 보장지도 대상자(그로기 상태)]로 지정되었습니다!
+        </div>
+        <button class="btn-notice-confirm" id="btn-notice-confirm">확인하고 재도전하기 ➡️</button>
+      </div>
+    </div>
+
+    <!-- 모달: 퀴즈 풀이 모달 -->
+    <div class="quiz-overlay" id="quiz-overlay">
+      <div class="quiz-modal-box">
+        <div class="quiz-header-badge" id="quiz-badge">
+          <span>📝 2022 개정 교육과정 핵심 문제</span>
+        </div>
+        <h3 class="quiz-question-text" id="quiz-question-text">
+          문제가 여기에 출력됩니다.
+        </h3>
+        <div class="quiz-options-list" id="quiz-options-list">
+          <!-- JS 동적 생성 -->
+        </div>
+        <div class="quiz-exp-box" id="quiz-exp-box">
+          <!-- 정답 설명 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 모달: 나의 시간표 & 이수 과목 도감 모달 -->
+    <div class="deck-overlay" id="deck-overlay">
+      <div class="deck-modal-box">
+        <div class="deck-header">
+          <h2>📋 나의 3개년 시간표 & 4대 역량 도감</h2>
+          <button class="btn-close-deck" id="btn-close-deck">✕ 닫기</button>
+        </div>
+
+        <div class="deck-stats-summary">
+          <div>
+            <div class="stat-item-label">📚 학업역량</div>
+            <div class="stat-item-val" style="color:var(--stat-academic);" id="deck-stat-academic">0</div>
+          </div>
+          <div>
+            <div class="stat-item-label">🎯 진로역량</div>
+            <div class="stat-item-val" style="color:var(--stat-career);" id="deck-stat-career">0</div>
+          </div>
+          <div>
+            <div class="stat-item-label">⚡ 자기주도</div>
+            <div class="stat-item-val" style="color:var(--stat-self);" id="deck-stat-self">0</div>
+          </div>
+          <div>
+            <div class="stat-item-label">🤝 공동체</div>
+            <div class="stat-item-val" style="color:var(--stat-comm);" id="deck-stat-comm">0</div>
+          </div>
+        </div>
+
+        <div style="background:#0f172a; border-radius:8px; padding:6px; display:flex; justify-content:space-around; font-size:0.75rem;">
+          <div>공통: <strong id="deck-common-credits">0학점</strong></div>
+          <div>선택: <strong id="deck-elective-credits">0학점</strong></div>
+          <div>창체: <strong id="deck-creative-credits">0학점</strong></div>
+          <div>총 이수: <strong style="color:var(--gold);" id="deck-total-credits">0 / 192</strong></div>
+        </div>
+
+        <div class="deck-subjects-grid" id="deck-subjects-grid">
+          <!-- JS 동적 생성 -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="game-data.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
