@@ -49,7 +49,14 @@ class CreditRogueGame {
       isEnraged: false,
       
       // 최소성취수준 보장지도 (그로기) 상태
-      isGroggy: false
+      isGroggy: false,
+
+      // 보스전 2페이즈 시스템 (HP 임계값 통과 시 보스별 고유 기믹 발동)
+      bossPhase: 1,
+
+      // 에픽 보상카드 전용 소모형 충전 (자동 정답 / 오답 반격 무효화)
+      autoCorrectCharges: 0,
+      failInsuranceCharges: 0
     };
 
     // 몬스터 스프라이트 이미지 존재 여부 캐시 (enemyId -> true/false), 적별로 1회만 검사
@@ -357,7 +364,9 @@ class CreditRogueGame {
       mentorUses: s.mentorUses,
       skillCooldown: s.skillCooldown,
       completedSubjects: s.completedSubjects,
-      isGroggy: s.isGroggy
+      isGroggy: s.isGroggy,
+      autoCorrectCharges: s.autoCorrectCharges,
+      failInsuranceCharges: s.failInsuranceCharges
     };
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify(snapshot));
@@ -423,6 +432,8 @@ class CreditRogueGame {
     this.state.completedSubjects = [];
     this.state.mentorUses = BALANCE_CONFIG.start.mentorUses;
     this.state.skillCooldown = 0;
+    this.state.autoCorrectCharges = 0;
+    this.state.failInsuranceCharges = 0;
 
     if (this.state.track && this.state.track.initialStats) {
       this.state.stats = { ...this.state.track.initialStats };
@@ -562,6 +573,7 @@ class CreditRogueGame {
     this.state.battleTurn = 1;
     this.state.isGuarding = false;
     this.state.isEnraged = false;
+    this.state.bossPhase = 1;
     this.elPlayerBox.classList.remove('shield-active');
     this.elEnemySprite.classList.remove('enraged-monster');
 
@@ -630,8 +642,7 @@ class CreditRogueGame {
     this.loadEnemySprite(subject);
     this.updateBattleUI();
 
-    const matchup = this.getMatchupEffectiveness();
-    this.setDialog(`야생의 [${subject.categoryName}] ${subject.name} 과목 출현! (${matchup.label})`);
+    this.setDialog(`👾 야생의 [${subject.categoryName}] ${subject.name} 출현! ${subject.flavor || ''}`);
   }
 
   // 8. 보스 웨이브 시작 (16, 32, 48)
@@ -649,7 +660,9 @@ class CreditRogueGame {
     this.switchView('battle');
     this.loadEnemySprite(boss);
     this.updateBattleUI();
-    this.setDialog(`👑 [보스전] ${boss.name}이 등장했다! 강력한 시험 공세를 방어하며 격파하라!`);
+
+    const phase1Desc = boss.bossMechanic ? ` ${boss.bossMechanic.phase1Desc}` : '';
+    this.setDialog(`👑 [보스전] ${boss.name} 등장! ${boss.flavor || ''}${phase1Desc}`);
   }
 
   // 배틀 UI 갱신
@@ -675,13 +688,18 @@ class CreditRogueGame {
     this.elEnemyHpText.textContent = `${this.state.currentEnemyHp} / ${this.state.maxEnemyHp}`;
     this.setHpColor(this.elEnemyHpBar, enemyHpPct);
 
-    // 몬스터 HP 저하 시 분노 각성 모드
+    // 몬스터 HP 저하 시 분노 각성 모드 (보스는 자체 2페이즈 기믹을 쓰므로 제외)
     const enrageCfg = BALANCE_CONFIG.enrage;
-    if (enemyHpPct <= enrageCfg.hpThresholdPct && !this.state.isEnraged && this.state.currentEnemyHp > 0) {
+    if (!this.state.isBossWave && enemyHpPct <= enrageCfg.hpThresholdPct && !this.state.isEnraged && this.state.currentEnemyHp > 0) {
       this.state.isEnraged = true;
       this.elEnemySprite.classList.add('enraged-monster');
       const boostPct = Math.round((enrageCfg.damageMult - 1) * 100);
       this.setDialog(`⚠️ [경고] [${enemy.name}]이(가) '시험 직전 벼락치기 각성 모드'에 돌입했습니다! 공격력이 ${boostPct}% 상승합니다!`);
+    }
+
+    // 보스전 2페이즈 전환 체크 (HP 임계값 통과 시 보스별 고유 기믹 발동)
+    if (this.state.isBossWave) {
+      this.checkBossPhaseTransition(enemyHpPct);
     }
 
     // 플레이어 멘탈(HP)바 & 텍스트
@@ -709,7 +727,12 @@ class CreditRogueGame {
 
     // 턴 & 스킬 쿨타임 표시
     this.elInfoBattleTurn.textContent = `Turn ${this.state.battleTurn}`;
-    if (this.state.skillCooldown > 0) {
+    const skillLockedByBoss = this.state.isBossWave && this.state.bossPhase === 1
+      && enemy.bossMechanic && enemy.bossMechanic.skillLockedPhase1;
+    if (skillLockedByBoss) {
+      this.elBtnSkill.disabled = true;
+      this.elSkillCdText.textContent = '(페이즈 1 봉인)';
+    } else if (this.state.skillCooldown > 0) {
       this.elBtnSkill.disabled = true;
       this.elSkillCdText.textContent = `(${this.state.skillCooldown}턴 남음)`;
     } else {
@@ -720,6 +743,19 @@ class CreditRogueGame {
     this.updatePlayerStatsUI();
     this.elBtnQuiz.disabled = false;
     this.elBtnGuard.disabled = false;
+  }
+
+  // 보스전 2페이즈 전환 체크 — HP가 보스별 임계값(phase2Threshold) 이하로 내려가면 1회 발동
+  checkBossPhaseTransition(enemyHpPct) {
+    const enemy = this.state.currentEnemy;
+    if (!enemy.bossMechanic) return;
+
+    if (this.state.bossPhase === 1 && this.state.currentEnemyHp > 0 && enemyHpPct <= enemy.bossMechanic.phase2Threshold) {
+      this.state.bossPhase = 2;
+      this.elEnemySprite.classList.add('enraged-monster');
+      window.soundEngine.playBossEncounter();
+      this.setDialog(enemy.bossMechanic.phase2Desc);
+    }
   }
 
   // 몬스터 스프라이트 이미지 로드 (적별 1회만 존재 여부 검사 후 캐시, 이후엔 캐시된 결과 재사용)
@@ -802,7 +838,15 @@ class CreditRogueGame {
   // 10. 퀴즈 정답 제출 처리
   submitAnswer(chosenIdx, btnElem) {
     const quiz = this.state.currentQuiz;
-    const isCorrect = (chosenIdx === quiz.ans);
+    let isCorrect = (chosenIdx === quiz.ans);
+
+    // 🔮 족집게 예상문제집: 오답이어도 1회 자동 정답 처리
+    let usedAutoCorrect = false;
+    if (!isCorrect && this.state.autoCorrectCharges > 0) {
+      this.state.autoCorrectCharges--;
+      isCorrect = true;
+      usedAutoCorrect = true;
+    }
 
     const allBtns = this.quizOptionsList.querySelectorAll('.quiz-option-btn');
     allBtns.forEach(b => b.disabled = true);
@@ -813,7 +857,9 @@ class CreditRogueGame {
       window.soundEngine.playCorrect();
 
       this.quizExpBox.style.display = 'block';
-      this.quizExpBox.innerHTML = `<strong>✨ 정답입니다!</strong><br>${quiz.exp}`;
+      this.quizExpBox.innerHTML = usedAutoCorrect
+        ? `<strong>🔮 족집게 예상문제집 발동!</strong> 자동으로 정답 처리되었습니다!<br>${quiz.exp}`
+        : `<strong>✨ 정답입니다!</strong><br>${quiz.exp}`;
 
       setTimeout(() => {
         this.quizOverlay.classList.remove('active');
@@ -856,7 +902,15 @@ class CreditRogueGame {
     damage = damage * rngVariance;
 
     let isCrit = false;
-    const critChance = Math.min(cfg.critChanceCap, Math.round(career * cfg.critChanceCareerMult + (isSkill ? cfg.critChanceSkillBonus : 0)));
+    let critChance = Math.round(career * cfg.critChanceCareerMult + (isSkill ? cfg.critChanceSkillBonus : 0));
+
+    // 보스 2페이즈 기믹: 3년간 쌓은 실력이 발현되어 크리티컬 확률 상승
+    const enemy = this.state.currentEnemy;
+    if (this.state.isBossWave && this.state.bossPhase === 2 && enemy.bossMechanic && enemy.bossMechanic.playerCritBonusPhase2) {
+      critChance += enemy.bossMechanic.playerCritBonusPhase2;
+    }
+    critChance = Math.min(cfg.critChanceCap, critChance);
+
     if (Math.random() * 100 < critChance) {
       isCrit = true;
       damage = damage * cfg.critDamageMult;
@@ -905,6 +959,17 @@ class CreditRogueGame {
     if (this.state.currentQuizType === 'skill') {
       this.state.skillCooldown = BALANCE_CONFIG.quizAttack.skillCooldownTurns;
     }
+
+    // 🛡️ 완벽한 오답 노트: 오답 반격을 1회 완전 무효화
+    if (this.state.failInsuranceCharges > 0) {
+      this.state.failInsuranceCharges--;
+      this.setDialog('🛡️ [완벽한 오답 노트 발동!] 오답 페널티가 무효화되어 몬스터의 반격을 완전히 피했습니다!');
+      this.state.battleTurn++;
+      if (this.state.skillCooldown > 0) this.state.skillCooldown--;
+      this.updateBattleUI();
+      return;
+    }
+
     this.setDialog(`개념 혼동으로 공격이 빗나갔다! 몬스터의 반격이 다가온다!`);
     setTimeout(() => {
       this.triggerEnemyTurn(BALANCE_CONFIG.enemyAttack.failPenaltyMult);
@@ -914,17 +979,26 @@ class CreditRogueGame {
   // 13. 오답노트 방어 액션
   executeGuardAction() {
     const cfg = BALANCE_CONFIG.guard;
+    const enemy = this.state.currentEnemy;
     this.state.isGuarding = true;
     this.elPlayerBox.classList.add('shield-active');
 
+    // 보스 2페이즈 기믹: 위계성 재검증 압박으로 방어 회복 효과 무효화
+    const healNullified = this.state.isBossWave && this.state.bossPhase === 2
+      && enemy.bossMechanic && enemy.bossMechanic.guardHealNullifyPhase2;
+
     const baseHeal = cfg.healBase + Math.round(this.state.stats.selfDirected / cfg.healSelfDirectedDivisor);
-    const healVal = Math.round(baseHeal * (cfg.healVarianceMin + Math.random() * cfg.healVarianceRange));
+    const healVal = healNullified ? 0 : Math.round(baseHeal * (cfg.healVarianceMin + Math.random() * cfg.healVarianceRange));
 
     this.state.playerHp = Math.min(this.state.maxPlayerHp, this.state.playerHp + healVal);
     this.updateBattleUI();
 
     const reductionPct = Math.round((1 - cfg.enemyDamageMult) * 100);
-    this.setDialog(`🛡️ [오답노트 방어 태세] 멘탈을 +${healVal} 회복하고 이번 턴 적의 공격을 ${reductionPct}% 경감합니다!`);
+    if (healNullified) {
+      this.setDialog(`🛡️ [방어 태세] 위계성 재검증 압박으로 회복 효과가 무효화되었다! 그래도 적의 공격을 ${reductionPct}% 경감합니다!`);
+    } else {
+      this.setDialog(`🛡️ [오답노트 방어 태세] 멘탈을 +${healVal} 회복하고 이번 턴 적의 공격을 ${reductionPct}% 경감합니다!`);
+    }
 
     setTimeout(() => {
       this.triggerEnemyTurn();
@@ -973,6 +1047,11 @@ class CreditRogueGame {
 
     if (this.state.isEnraged) {
       dmg = dmg * BALANCE_CONFIG.enrage.damageMult;
+    }
+
+    // 보스 2페이즈 기믹: 공격력 상승
+    if (this.state.isBossWave && this.state.bossPhase === 2 && enemy.bossMechanic && enemy.bossMechanic.enemyDmgMultPhase2) {
+      dmg = dmg * enemy.bossMechanic.enemyDmgMultPhase2;
     }
 
     const rngVariance = cfg.rngVarianceMin + Math.random() * cfg.rngVarianceRange;
@@ -1087,20 +1166,21 @@ class CreditRogueGame {
     }, 1200);
   }
 
-  // 18. 보상 카드 선택 화면 (3택 1)
+  // 18. 보상 카드 선택 화면 (3택 1, 희귀도 가중 추첨)
   showRewardScreen() {
     this.switchView('reward');
     window.soundEngine.playRewardPick();
 
     this.rewardContainer.innerHTML = '';
 
-    const shuffled = [...GAME_DATA.rewardCards].sort(() => 0.5 - Math.random());
-    const selectedCards = shuffled.slice(0, 3);
+    const selectedCards = this.pickRewardCards(3);
+    const rarityLabel = { common: '일반', rare: '레어', epic: '에픽' };
 
     selectedCards.forEach(card => {
       const cardEl = document.createElement('div');
-      cardEl.className = 'reward-card';
+      cardEl.className = `reward-card rarity-${card.rarity}`;
       cardEl.innerHTML = `
+        <span class="reward-card-rarity-tag rarity-${card.rarity}">${rarityLabel[card.rarity] || '일반'}</span>
         <span class="reward-card-icon">${card.icon}</span>
         <div class="reward-card-name">${card.name}</div>
         <span class="reward-card-badge">${card.type === 'creative' ? '창체 & 역량' : '학습 아이템'}</span>
@@ -1116,13 +1196,34 @@ class CreditRogueGame {
     });
   }
 
+  // 희귀도 가중 추첨으로 중복 없는 카드 N장을 뽑음 (일반 60% / 레어 30% / 에픽 10%)
+  pickRewardCards(count) {
+    const weights = { epic: 10, rare: 30, common: 60 };
+    const chosen = [];
+    const usedIds = new Set();
+    let guard = 0;
+
+    while (chosen.length < count && guard < 200) {
+      guard++;
+      const roll = Math.random() * 100;
+      const rarity = roll < weights.epic ? 'epic' : (roll < weights.epic + weights.rare ? 'rare' : 'common');
+      const pool = GAME_DATA.rewardCards.filter(c => c.rarity === rarity && !usedIds.has(c.id));
+      if (pool.length === 0) continue;
+
+      const card = pool[Math.floor(Math.random() * pool.length)];
+      usedIds.add(card.id);
+      chosen.push(card);
+    }
+    return chosen;
+  }
+
   applyRewardCard(card) {
     const eff = card.effect;
 
     if (eff.stat && eff.value) {
       this.addStat(eff.stat, eff.value);
     }
-    if (eff.multiStat && eff.stats) {
+    if (eff.stats) {
       Object.keys(eff.stats).forEach(k => this.addStat(k, eff.stats[k]));
     }
     if (eff.maxMental) {
@@ -1138,6 +1239,15 @@ class CreditRogueGame {
     }
     if (eff.type === 'healFull') {
       this.state.playerHp = this.state.maxPlayerHp;
+    }
+    if (eff.type === 'resetSkillCooldown') {
+      this.state.skillCooldown = 0;
+    }
+    if (eff.type === 'autoCorrect') {
+      this.state.autoCorrectCharges += eff.uses || 1;
+    }
+    if (eff.type === 'failInsurance') {
+      this.state.failInsuranceCharges += eff.uses || 1;
     }
 
     this.nextWave();
@@ -1228,14 +1338,17 @@ class CreditRogueGame {
 
       const eElem = GAME_DATA.elements[s.element];
       const elemBadge = eElem ? `<span class="element-tag-badge" style="background:${eElem.color}; font-size:0.65rem;">${eElem.icon} ${eElem.name}</span>` : '';
+      const flavor = (GAME_DATA.subjects[s.id] || {}).flavor || '';
 
       const item = document.createElement('div');
       item.className = 'deck-subject-card';
+      if (flavor) item.title = flavor;
       item.innerHTML = `
         <span style="font-size:1.6rem;">${s.icon || '📖'}</span>
         <div>
           <div style="font-weight:700; color:#fff; display:flex; align-items:center; gap:4px;">${s.name} ${elemBadge}</div>
           <div style="font-size:0.75rem; color:#94a3b8;">${s.categoryName} (${s.credits}학점)</div>
+          ${flavor ? `<div class="deck-subject-flavor">${flavor}</div>` : ''}
         </div>
       `;
       this.deckSubjectsGrid.appendChild(item);

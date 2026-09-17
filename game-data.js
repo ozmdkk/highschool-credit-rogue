@@ -358,6 +358,7 @@ const GAME_DATA = {
       color: '#f87171',
       attackName: '문맥 왜곡 공격',
       attackDmg: 15,
+      flavor: '고대 한글 두루마리로 날개를 엮은 지혜의 부엉이. 깃털 펜 끝에서 논리적 문장이 빛난다.',
       quizzes: [
         {
           q: '2022 개정 교육과정 공통국어에서 강조하는 비판적 사고의 핵심은?',
@@ -391,6 +392,7 @@ const GAME_DATA = {
       color: '#60a5fa',
       attackName: '다항식 행렬 연산파',
       attackDmg: 17,
+      flavor: '파란 정육면체들이 회전하며 만들어진 기하 골렘. 나침반 눈으로 좌표를 꿰뚫어 본다.',
       quizzes: [
         {
           q: '2022 개정 공통수학1에 디지털·AI 소양 강화를 위해 다시 도입된 수학 단원은?',
@@ -424,6 +426,7 @@ const GAME_DATA = {
       color: '#fbbf24',
       attackName: '글로벌 소통 음파',
       attackDmg: 15,
+      flavor: '알파벳 깃털을 휘날리는 글로벌 앵무새. 부리에서 터지는 소리 파동이 세계를 잇는다.',
       quizzes: [
         {
           q: '글로벌 진로 소통에서 정중하게 다른 관점을 제시하는 적절한 표현은?',
@@ -457,6 +460,7 @@ const GAME_DATA = {
       color: '#34d399',
       attackName: '사회 갈등 딜레마 파동',
       attackDmg: 16,
+      flavor: '작은 지구본을 손끝에 띄운 고귀한 수호 거인. 반대쪽 손엔 정의의 저울이 늘 균형을 잡는다.',
       quizzes: [
         {
           q: '통합사회에서 현대 사회의 다양한 문제를 분석하는 4대 관점에 포함되지 않는 것은?',
@@ -490,6 +494,7 @@ const GAME_DATA = {
       color: '#a78bfa',
       attackName: '빅뱅 원소 방출 빔',
       attackDmg: 17,
+      flavor: '투명한 몸속에서 원자 전자가 궤도를 그리는 원소 슬라임. 빅뱅의 흔적을 품고 있다.',
       quizzes: [
         {
           q: '우주 초기에 수소와 헬륨이 생성되고 물질 시스템이 형성되었다는 이론은?',
@@ -523,6 +528,7 @@ const GAME_DATA = {
       color: '#fb923c',
       attackName: '역사의 소용돌이 일격',
       attackDmg: 16,
+      flavor: '성벽 돌을 깎아 만든 전설의 해태. 갈기의 불꽃이 역사의 소용돌이를 태운다.',
       quizzes: [
         {
           q: '1919년 3·1 운동의 결실로 수립되어 민주공화제의 기틀을 마련한 정부는?',
@@ -556,6 +562,7 @@ const GAME_DATA = {
       color: '#94a3b8',
       attackName: '생활 발명 압박',
       attackDmg: 14,
+      flavor: '하이테크 고글을 쓴 발명가 비버. 회로기판 꼬리로 생활 속 아이디어를 뚝딱 조립한다.',
       quizzes: [
         {
           q: '자신의 미래 진로와 재무 목표를 체계적으로 계획하고 실천하는 것은?',
@@ -589,6 +596,7 @@ const GAME_DATA = {
       color: '#ec4899',
       attackName: '심미적 감성 소닉웨이브',
       attackDmg: 14,
+      flavor: '팔레트를 방패처럼 든 예술 요정. 음표 화살이 감성을 명중시킨다.',
       quizzes: [
         {
           q: '2022 개정 교육과정 예술 교과가 강조하는 핵심 소양은?',
@@ -622,6 +630,7 @@ const GAME_DATA = {
       color: '#10b981',
       attackName: '실험 오차 폭발',
       attackDmg: 15,
+      flavor: '부글거리는 플라스크 로켓을 탄 장난기 가득한 연금술사 임프. 실험은 늘 예측불가.',
       quizzes: [
         {
           q: '실험에서 결과를 관찰하고자 의도적으로 변화시키는 요인은?',
@@ -655,6 +664,7 @@ const GAME_DATA = {
       color: '#06b6d4',
       attackName: '지구력 소진 어택',
       attackDmg: 15,
+      flavor: '불타는 스니커즈를 신은 열정 가득한 호랑이 운동선수. 지치지 않는 지구력이 자랑이다.',
       quizzes: [
         {
           q: '고등학교 3년의 장기적인 학업과 진로 탐구를 지탱하는 가장 기초적인 바탕은?',
@@ -690,6 +700,7 @@ const GAME_DATA = {
       color: '#3b82f6',
       attackName: '지수·로그·수열 연쇄파',
       attackDmg: 19,
+      flavor: '지수·로그의 나선 에너지를 뿔에서 뿜어내는 하늘빛 뱀 드래곤. 다항식 무늬가 비늘마다 새겨져 있다.',
       quizzes: [
         {
           q: '2022 개정 교육과정에서 지수·로그함수와 삼각함수, 수열을 다루는 일반선택 과목명은?',
@@ -723,6 +734,7 @@ const GAME_DATA = {
       color: '#6366f1',
       attackName: '작용·반작용 역습',
       attackDmg: 20,
+      flavor: '말굽자석 견갑을 두른 메카 에너지 기사. 중력구를 띄운 채 전기 스파크를 흩뿌린다.',
       quizzes: [
         {
           q: '뉴턴의 운동 제2법칙(가속도의 법칙)을 나타내는 공식은?',
@@ -756,6 +768,7 @@ const GAME_DATA = {
       color: '#14b8a6',
       attackName: '산화·환원 반응 플래시',
       attackDmg: 19,
+      flavor: '주기율표 방패를 든 신비한 물약 마스터. 양손에서 화염과 냉기의 산화·환원 구슬을 동시에 다룬다.',
       quizzes: [
         {
           q: '물질을 구성하는 가장 작은 단위 입자로 양성자, 중성자, 전자로 이루어진 것은?',
@@ -789,6 +802,7 @@ const GAME_DATA = {
       color: '#22c55e',
       attackName: '유전 정보 암호 교란',
       attackDmg: 19,
+      flavor: 'DNA 이중나선 꼬리를 반짝이는 자연 정령. 나뭇잎 날개로 생명의 신비를 실어 나른다.',
       quizzes: [
         {
           q: '세포 내에서 생명체의 유전 정보를 저장하고 있는 고분자 핵산은?',
@@ -822,6 +836,7 @@ const GAME_DATA = {
       color: '#0284c7',
       attackName: '판구조론 판 충돌 지진파',
       attackDmg: 19,
+      flavor: '판구조 갑옷을 두른 거대한 지질 타이탄. 갈라진 틈마다 용암이 흐르고 구름이 감돈다.',
       quizzes: [
         {
           q: '지구 표면이 여러 개의 판으로 이루어져 서서히 이동한다는 이론은?',
@@ -855,6 +870,7 @@ const GAME_DATA = {
       color: '#2563eb',
       attackName: '다항함수 미적분 파동',
       attackDmg: 21,
+      flavor: '도함수 곡선의 검을 휘두르는 예리한 기사. 벤 자리마다 극한의 왜곡 고리가 남는다.',
       quizzes: [
         {
           q: '2022 개정 교육과정에서 함수의 극한과 다항함수의 미적분을 다루는 일반선택 과목명은?',
@@ -888,6 +904,7 @@ const GAME_DATA = {
       color: '#0ea5e9',
       attackName: '알고리즘 스택 오버플로우',
       attackDmg: 19,
+      flavor: '이진코드로 몸을 이룬 사이버 늑대. 광섬유 회로가 등줄기를 따라 맥동한다.',
       quizzes: [
         {
           q: '프로그래밍에서 문제를 해결하기 위한 명확한 절차나 명령어의 집합은?',
@@ -921,6 +938,7 @@ const GAME_DATA = {
       color: '#eab308',
       attackName: '문화 지체 현상 충격',
       attackDmg: 18,
+      flavor: '두 얼굴을 지닌 카멜레온. 한쪽은 전통, 한쪽은 유행을 비추며 사회의 기호를 띄운다.',
       quizzes: [
         {
           q: '물질문화의 변동 속도를 비물질문화(제도, 의식)가 따라가지 못해 발생하는 부조화는?',
@@ -954,6 +972,7 @@ const GAME_DATA = {
       color: '#f97316',
       attackName: '인류 문명 연대기',
       attackDmg: 18,
+      flavor: '등껍질 위에 콜로세움과 피라미드, 증기기관을 얹고 걷는 고대 거북. 문명의 무게를 그대로 짊어졌다.',
       quizzes: [
         {
           q: '18세기 후반 증기기관 발명과 기계화로 사회 경제 구조를 바꾼 대변혁은?',
@@ -987,6 +1006,7 @@ const GAME_DATA = {
       color: '#d97706',
       attackName: '지정학적 갈등 기류',
       attackDmg: 18,
+      flavor: '지형도 날개를 펼친 탐험가 매. 발톱의 나침반이 기후와 국경을 넘나든다.',
       quizzes: [
         {
           q: '지구촌의 환경, 자원, 분쟁 문제를 세계시민의 관점에서 탐구하는 2022 개정 지리 과목은?',
@@ -1020,6 +1040,7 @@ const GAME_DATA = {
       color: '#1e40af',
       attackName: '평면·공간도형 좌표 임팩트',
       attackDmg: 20,
+      flavor: '벡터 화살과 이차곡선 궤도로 몸을 이룬 공간 기하 스피릿. 회전할 때마다 완벽한 원뿔곡선을 그려낸다.',
       quizzes: [
         {
           q: '2022 개정 수학 교과에서 벡터, 평면좌표, 공간도형과 이차곡선을 다루는 일반선택 과목은?',
@@ -1053,6 +1074,7 @@ const GAME_DATA = {
       color: '#fbbf24',
       attackName: '윤리적 딜레마 성찰파',
       attackDmg: 18,
+      flavor: '두 개의 저울을 양손에 든 성찰의 스핑크스. 생명·정보·환경 윤리의 딜레마를 조용히 되묻는다.',
       quizzes: [
         {
           q: '생명공학기술의 발전으로 발생하는 윤리적 쟁점을 주로 다루는 응용윤리 분야는?',
@@ -1086,6 +1108,7 @@ const GAME_DATA = {
       color: '#0891b2',
       attackName: '운동·에너지 충격파',
       attackDmg: 19,
+      flavor: '구심력의 톱니바퀴를 두른 강철 골렘. 몸속에서 위치·운동 에너지가 끊임없이 순환한다.',
       quizzes: [
         {
           q: '물체의 운동에서 위치 에너지와 운동 에너지의 합이 일정하게 유지된다는 법칙은?',
@@ -1119,6 +1142,7 @@ const GAME_DATA = {
       color: '#c026d3',
       attackName: '통합 탐구 융합파',
       attackDmg: 19,
+      flavor: '물리·화학·생물·지구과학의 조각을 이어붙인 퍼즐 크리처. 흩어진 분야를 하나의 답으로 융합한다.',
       quizzes: [
         {
           q: '기후변화처럼 물리·화학·생물·지구과학 여러 분야가 얽힌 문제를 통합적으로 탐구하는 접근은?',
@@ -1154,6 +1178,7 @@ const GAME_DATA = {
       color: '#8b5cf6',
       attackName: '과적합(Overfitting) 파동',
       attackDmg: 23,
+      flavor: '시냅스처럼 빛나는 신경망 코어를 지닌 안드로이드. 텐서 다이어그램이 주위를 홀로그램으로 떠다닌다.',
       quizzes: [
         {
           q: '인공지능이 대량의 데이터를 스스로 학습하여 특징 패턴을 추출하는 기술은?',
@@ -1187,6 +1212,7 @@ const GAME_DATA = {
       color: '#1d4ed8',
       attackName: '초월함수 무한적분 폭풍',
       attackDmg: 25,
+      flavor: '무한대 기호를 소환하는 대마법사. 거대한 적분 마법진이 허공에 펼쳐진다.',
       quizzes: [
         {
           q: '지수함수, 로그함수, 삼각함수 등 초월함수의 미적분을 다루는 2022 개정 진로선택 수학은?',
@@ -1220,6 +1246,7 @@ const GAME_DATA = {
       color: '#0284c7',
       attackName: '다관절 매니퓰레이터 레이저',
       attackDmg: 23,
+      flavor: '다관절 레이저 팔을 장착한 중전투 메크. 라이다 센서가 쉴 새 없이 주변을 스캔한다.',
       quizzes: [
         {
           q: '로봇이 주변 환경 정보를 물리적으로 감지하여 전기 신호로 변환하는 장치는?',
@@ -1253,6 +1280,7 @@ const GAME_DATA = {
       color: '#7c3aed',
       attackName: '양자 중첩 불확정성 충격',
       attackDmg: 24,
+      flavor: '확률구름에 휩싸인 양자파동 존재. 얽힌 광자 입자가 전자기 flux와 함께 명멸한다.',
       quizzes: [
         {
           q: '미시 세계에서 입자가 파동의 성질을 동시에 가지며 상태가 중첩되어 존재한다는 물리학 분야는?',
@@ -1286,6 +1314,7 @@ const GAME_DATA = {
       color: '#16a34a',
       attackName: '유전자 가위(CRISPR) 절단',
       attackDmg: 24,
+      flavor: '크리스퍼 유전자 가위 모양의 쌍검을 다루는 생체분자 발키리. 유전 나선을 정밀하게 편집한다.',
       quizzes: [
         {
           q: '특정 DNA 염기서열을 정밀하게 교정하는 첨단 생명공학 기술은?',
@@ -1319,6 +1348,7 @@ const GAME_DATA = {
       color: '#8b5cf6',
       attackName: '헌법 재판 위헌 해머',
       attackDmg: 22,
+      flavor: '헌법 갑옷을 걸친 사자 판사. 황금 정의의 망치가 위헌을 가른다.',
       quizzes: [
         {
           q: '국민의 기본권을 보장하고 국가 권력의 남용을 방지하기 위한 국가 최고 규범은?',
@@ -1352,6 +1382,7 @@ const GAME_DATA = {
       color: '#6366f1',
       attackName: '외교 안보 다자협상 압박',
       attackDmg: 22,
+      flavor: '올리브 왕관을 쓴 외교관 백호. 세계 각국의 국기가 날개처럼 겹쳐 펼쳐진다.',
       quizzes: [
         {
           q: '전 세계의 평화 유지와 인도적 문제 해결을 위해 설립된 대표적인 국제기구는?',
@@ -1385,6 +1416,7 @@ const GAME_DATA = {
       color: '#d97706',
       attackName: '사회 양극화 모순 일격',
       attackDmg: 22,
+      flavor: '모노클을 쓴 탐정 까마귀. 빅데이터 확대경으로 불평등의 단서를 파헤친다.',
       quizzes: [
         {
           q: '사회문제를 객관적으로 조사하고 해결책을 제시할 때 가장 신뢰할 만한 탐구 방법은?',
@@ -1418,6 +1450,7 @@ const GAME_DATA = {
       color: '#db2777',
       attackName: '미디어 리터러시 파동',
       attackDmg: 21,
+      flavor: '카메라 렌즈 눈을 가진 팝아트 미디어 괴수. 안테나 뿔에서 디지털 글리치가 흩날린다.',
       quizzes: [
         {
           q: '디지털 미디어 정보를 무비판적으로 수용하지 않고 주체적으로 비판·분석하는 역량은?',
@@ -1451,6 +1484,7 @@ const GAME_DATA = {
       color: '#e11d48',
       attackName: '디지털 사운드트랙 쇼크',
       attackDmg: 21,
+      flavor: '이퀄라이저 헤드폰을 낀 사이버 DJ. 홀로그램 믹서 데크로 신스웨이브를 지휘한다.',
       quizzes: [
         {
           q: '영상, 게임, 인터랙티브 콘텐츠에 어우러져 감정과 몰입감을 극대화하는 음악 분야는?',
@@ -1484,6 +1518,7 @@ const GAME_DATA = {
       color: '#ca8a04',
       attackName: '수요·공급 시장 충격',
       attackDmg: 22,
+      flavor: '동전을 저글링하는 시장의 광대. 수요와 공급의 균형점에서만 완벽하게 웃는다.',
       quizzes: [
         {
           q: '가격이 오르면 수요량이 줄고, 가격이 내리면 수요량이 늘어나는 일반적 관계는?',
@@ -1517,6 +1552,7 @@ const GAME_DATA = {
       color: '#0d9488',
       attackName: '화학평형 반응 폭발',
       attackDmg: 23,
+      flavor: '플라스크 심장 속에서 정반응과 역반응이 끝없이 맞부딪히는 평형의 정령.',
       quizzes: [
         {
           q: '화학반응의 속도에 영향을 주는 요인이 아닌 것은?',
@@ -1550,6 +1586,7 @@ const GAME_DATA = {
       color: '#4f46e5',
       attackName: '경사하강 최적화 연산파',
       attackDmg: 24,
+      flavor: '행렬과 벡터로 짜인 그물을 두른 지능형 거미. 경사하강의 발걸음으로 오차를 좁혀간다.',
       quizzes: [
         {
           q: '인공지능 수학에서 데이터를 벡터와 행렬로 표현해 연산하는 수학 분야는?',
@@ -1583,6 +1620,7 @@ const GAME_DATA = {
       color: '#be185d',
       attackName: '매체 전환 몽타주 임팩트',
       attackDmg: 21,
+      flavor: '책장이 필름 릴로 변신하는 셰이프시프터. 한 장의 글이 한 편의 영화로 펼쳐진다.',
       quizzes: [
         {
           q: '소설이 영화로 각색될 때, 문자로 서술된 내용이 화면과 소리로 표현되는 과정을 무엇이라 하는가?',
@@ -2476,7 +2514,17 @@ const GAME_DATA = {
       color: '#ef4444',
       attackName: '공통 5대 과목 융합 공세',
       attackDmg: 20,
+      flavor: '국어·수학·영어·사회·과학 5대 교과서 큐브가 융합된 거대한 시험 수호 토템. 무지개빛 합격 인장이 온몸을 감싼다.',
       statRewards: { academic: 20, selfDirected: 15 },
+      // 2페이즈 보스 기믹: 1페이즈엔 심화 탐구 스킬 봉인(기초 5과목 통합 상태라 아직 심화 탐구 불가) →
+      // HP 50% 이하 2페이즈에서 봉인 해제 & 벼락치기 각성으로 공격력 상승
+      bossMechanic: {
+        phase1Desc: '⚠️ [페이즈 1] 5대 공통과목이 융합된 상태라 심화 탐구가 통하지 않는다! 🔥 심화 탐구 스킬이 봉인된다!',
+        skillLockedPhase1: true,
+        phase2Threshold: 50,
+        phase2Desc: '⚡ [페이즈 2 돌입] 벼락치기 각성! 심화 탐구 스킬 봉인이 풀렸지만, 보스의 공격력이 크게 상승했다!',
+        enemyDmgMultPhase2: 1.35
+      },
       quizzes: [
         {
           q: '고교학점제에서 3년간 졸업을 위해 반드시 채워야 하는 총 이수 학점 수는?',
@@ -2508,7 +2556,16 @@ const GAME_DATA = {
       color: '#8b5cf6',
       attackName: '위계성 검증 & I등급 압박',
       attackDmg: 25,
+      flavor: '3개의 기계 가면을 띄운 삼위일체 심사 메크. 학점 매트릭스 태블릿에 위계성 위반이 없는지 새긴다.',
       statRewards: { career: 25, selfDirected: 20 },
+      // 2페이즈 보스 기믹: HP 50% 이하 2페이즈에서 "위계성 재검증 압박" — 오답노트 방어의 회복 효과 무효화 + 공격력 상승
+      bossMechanic: {
+        phase1Desc: '⚠️ [페이즈 1] 선택과목의 위계성을 하나씩 검증하기 시작한다.',
+        phase2Threshold: 50,
+        phase2Desc: '⚡ [페이즈 2 돌입] 위계성 재검증 압박! 이제부터 오답노트 방어의 회복 효과가 무효화되고, 공격력이 상승한다!',
+        guardHealNullifyPhase2: true,
+        enemyDmgMultPhase2: 1.20
+      },
       quizzes: [
         {
           q: '2022 개정 수학 교과에서 위계성(선수과목)을 올바르게 지킨 경로는?',
@@ -2540,7 +2597,15 @@ const GAME_DATA = {
       color: '#ec4899',
       attackName: '192학점 총괄 종합 검증',
       attackDmg: 30,
+      flavor: '황금 학사모 왕관을 쓴 졸업의 그랜드 마스터. 192개의 학점 보석과 졸업장 날개가 빛을 뿜는다.',
       statRewards: { academic: 30, career: 30, selfDirected: 30, community: 30 },
+      // 2페이즈 보스 기믹: HP 50% 이하 2페이즈에서 3년간 쌓은 실력이 발현 — 플레이어 크리티컬 확률 대폭 상승(긍정적 반전)
+      bossMechanic: {
+        phase1Desc: '⚠️ [페이즈 1] 3년간의 모든 기록을 총괄 검증하기 시작한다.',
+        phase2Threshold: 50,
+        phase2Desc: '🌟 [페이즈 2 돌입] 그동안 쌓아온 모든 실력이 마침내 발현된다! 크리티컬 확률이 크게 상승한다!',
+        playerCritBonusPhase2: 20
+      },
       quizzes: [
         {
           q: '고등학교 3년 동안 자기주도적으로 설계한 교육과정 이수 기록이 주는 가장 큰 가치는?',
@@ -2565,11 +2630,14 @@ const GAME_DATA = {
   ],
 
   // 보상 카드 풀 (3택 1)
+  // 보상 카드 풀 — 희귀도(rarity)에 따라 등장 확률이 다름 (common > rare > epic)
   rewardCards: [
+    // ===== 커먼 (일반) =====
     {
       id: 'study_planner',
       name: '플래너 마스터 뱃지',
       type: 'item',
+      rarity: 'common',
       icon: '📅',
       desc: '매일 시간표를 체계적으로 관리! ⚡ 자기주도 +15 & 최대 멘탈 +25',
       effect: { type: 'stat', stat: 'selfDirected', value: 15, maxMental: 25 }
@@ -2578,6 +2646,7 @@ const GAME_DATA = {
       id: 'mentor_advice',
       name: '진로 부장님의 특별 조언',
       type: 'item',
+      rarity: 'common',
       icon: '💡',
       desc: '진로 방향성을 명확히 확립! 🎯 진로역량 +15 & 멘토링 찬스 2회 충전',
       effect: { type: 'stat', stat: 'career', value: 15, hintCharge: 2 }
@@ -2586,6 +2655,7 @@ const GAME_DATA = {
       id: 'club_activity',
       name: '전공 심화 자율동아리 개설',
       type: 'creative',
+      rarity: 'common',
       icon: '🏆',
       desc: '친구들과 협력하여 전공 탐구! 🤝 공동체역량 +15 & 창체 4학점 획득',
       effect: { type: 'stat', stat: 'community', value: 15, creativeCredit: 4 }
@@ -2594,6 +2664,7 @@ const GAME_DATA = {
       id: 'ai_mentor',
       name: 'AI 맞춤형 오답노트',
       type: 'item',
+      rarity: 'common',
       icon: '💻',
       desc: '약점 개념을 완벽 분석! 📚 학업역량 +15 & 퀴즈 데미지 상승',
       effect: { type: 'stat', stat: 'academic', value: 15 }
@@ -2602,6 +2673,7 @@ const GAME_DATA = {
       id: 'energy_drink',
       name: '비타민 충전 세트',
       type: 'item',
+      rarity: 'common',
       icon: '🥤',
       desc: '피로를 즉시 회복! 멘탈(HP) 100% 완전 회복 & ⚡ 자기주도 +10',
       effect: { type: 'healFull', stat: 'selfDirected', value: 10 }
@@ -2610,9 +2682,86 @@ const GAME_DATA = {
       id: 'reading_camp',
       name: '융합 독서 프로젝트',
       type: 'creative',
+      rarity: 'common',
       icon: '📚',
       desc: '인문·자연을 넘나드는 통섭 독서! 📚 학업 +10, 🤝 공동체 +10 & 창체 3학점',
       effect: { type: 'multiStat', stats: { academic: 10, community: 10 }, creativeCredit: 3 }
+    },
+
+    // ===== 레어 =====
+    {
+      id: 'skill_cooldown_reset',
+      name: '심화 탐구 즉시 재충전권',
+      type: 'item',
+      rarity: 'rare',
+      icon: '🔄',
+      desc: '🔥 심화 탐구 스킬의 쿨타임을 즉시 초기화합니다!',
+      effect: { type: 'resetSkillCooldown' }
+    },
+    {
+      id: 'senior_special_tutoring',
+      name: '선배의 특별 과외',
+      type: 'item',
+      rarity: 'rare',
+      icon: '🎓',
+      desc: '멘토링 찬스 +3회 충전 & 📚 학업역량 +10!',
+      effect: { type: 'stat', stat: 'academic', value: 10, hintCharge: 3 }
+    },
+    {
+      id: 'hall_of_fame_trophy',
+      name: '명예의 전당 트로피',
+      type: 'creative',
+      rarity: 'rare',
+      icon: '🏅',
+      desc: '대회 수상 경력 인정! 🎯 진로 +12, 🤝 공동체 +12 & 창체 3학점!',
+      effect: { type: 'multiStat', stats: { career: 12, community: 12 }, creativeCredit: 3 }
+    },
+    {
+      id: 'immersion_potion',
+      name: '학습 몰입 물약',
+      type: 'item',
+      rarity: 'rare',
+      icon: '🧪',
+      desc: '최대 멘탈 +30 & 즉시 완전 회복!',
+      effect: { type: 'healFull', maxMental: 30 }
+    },
+
+    // ===== 에픽 =====
+    {
+      id: 'exam_cheat_sheet',
+      name: '족집게 예상문제집',
+      type: 'item',
+      rarity: 'epic',
+      icon: '🔮',
+      desc: '다음 퀴즈는 무엇을 고르든 무조건 정답 처리됩니다! (1회 한정)',
+      effect: { type: 'autoCorrect', uses: 1 }
+    },
+    {
+      id: 'mistake_insurance',
+      name: '완벽한 오답 노트',
+      type: 'item',
+      rarity: 'epic',
+      icon: '🛡️',
+      desc: '다음에 퀴즈를 틀려도 몬스터의 반격을 완전히 무효화합니다! (1회 한정)',
+      effect: { type: 'failInsurance', uses: 1 }
+    },
+    {
+      id: 'genius_insight',
+      name: '천재의 통찰',
+      type: 'creative',
+      rarity: 'epic',
+      icon: '🌟',
+      desc: '4대 핵심 역량이 모두 +10씩 상승합니다!',
+      effect: { type: 'multiStat', stats: { academic: 10, career: 10, selfDirected: 10, community: 10 } }
+    },
+    {
+      id: 'graduate_legacy',
+      name: '졸업생 선배의 유산',
+      type: 'creative',
+      rarity: 'epic',
+      icon: '👑',
+      desc: '최대 멘탈 +40, 즉시 완전 회복 & 멘토링 찬스 +2회 충전!',
+      effect: { type: 'healFull', maxMental: 40, hintCharge: 2 }
     }
   ],
 
