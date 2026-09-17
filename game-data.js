@@ -187,60 +187,159 @@ const GAME_DATA = {
     }
   ],
 
+  // 트랙별 2·3학년 전투과목 조합 & 순서 (트랙 선택이 실제 진행 경로에 반영되도록 함)
+  // waveSchedule의 각 학년 전투 웨이브는 trackSlot(0~9) 인덱스로 이 배열을 순서대로 참조합니다.
+  trackSubjectRoutes: {
+    tech: {
+      year2: ['algebra', 'calculus1', 'info', 'physics', 'geometry', 'mechanics_energy', 'earth_sci', 'fusion_science_inquiry', 'global_geo', 'modern_ethics'],
+      year3: ['ai_basic', 'calculus2', 'robotics_eng', 'ai_math', 'quantum_em', 'chem_reactions_world', 'economics', 'media_comm', 'literature_and_film', 'social_problem']
+    },
+    bio: {
+      year2: ['biology', 'chemistry', 'physics', 'earth_sci', 'mechanics_energy', 'fusion_science_inquiry', 'modern_ethics', 'algebra', 'calculus1', 'global_geo'],
+      year3: ['gene_heredity', 'quantum_em', 'chem_reactions_world', 'ai_basic', 'ai_math', 'economics', 'social_problem', 'intl_relations', 'politics_law_soc', 'calculus2']
+    },
+    social: {
+      year2: ['soc_culture', 'world_history', 'global_geo', 'modern_ethics', 'earth_sci', 'fusion_science_inquiry', 'info', 'algebra', 'calculus1', 'biology'],
+      year3: ['politics_law_soc', 'intl_relations', 'social_problem', 'economics', 'media_comm', 'literature_and_film', 'ai_basic', 'gene_heredity', 'music_media', 'quantum_em']
+    },
+    art: {
+      year2: ['fusion_science_inquiry', 'soc_culture', 'world_history', 'global_geo', 'modern_ethics', 'info', 'geometry', 'earth_sci', 'mechanics_energy', 'algebra'],
+      year3: ['media_comm', 'music_media', 'literature_and_film', 'economics', 'social_problem', 'intl_relations', 'politics_law_soc', 'ai_basic', 'calculus2', 'gene_heredity']
+    }
+  },
+
+  // 이벤트 슬롯(0~4)별 후보 이벤트 풀 — 1학년은 트랙 공통, 2·3학년은 트랙별로 다른 이벤트를 겪음
+  // 슬롯당 후보가 2개 이상이라 같은 트랙으로 다회차 플레이해도 다른 이벤트가 등장할 수 있음
+  eventRoutes: {
+    common: {
+      0: ['y1_club_interview', 'y1_seatmate_intro'],
+      1: ['y1_assignment_hell', 'y1_group_project_conflict'],
+      2: ['y1_midterm_stress', 'y1_grade_comparison_stress'],
+      3: ['y1_peer_dilemma', 'y1_class_election'],
+      4: ['y1_course_survey', 'y1_record_worry']
+    },
+    byTrack: {
+      tech: {
+        year2: {
+          0: ['y2_course_registration', 'y2s0_tech'],
+          1: ['y2_min_achievement_crisis', 'y2s1_tech'],
+          2: ['y2_mock_exam_slump', 'y2s2_tech'],
+          3: ['y2_small_class_crisis', 'y2s3_tech'],
+          4: ['y2_festival_prep', 'y2s4_tech']
+        },
+        year3: {
+          0: ['y3_joint_curriculum', 'y3s0_tech'],
+          1: ['y3_mock_interview', 'y3s1_tech'],
+          2: ['y3_research_report', 'y3s2_tech'],
+          3: ['y3_exam_pressure', 'y3s3_tech'],
+          4: ['y3_portfolio_expo', 'y3s4_tech']
+        }
+      },
+      bio: {
+        year2: {
+          0: ['y2_course_registration', 'y2s0_bio'],
+          1: ['y2_min_achievement_crisis', 'y2s1_bio'],
+          2: ['y2_mock_exam_slump', 'y2s2_bio'],
+          3: ['y2_small_class_crisis', 'y2s3_bio'],
+          4: ['y2_festival_prep', 'y2s4_bio']
+        },
+        year3: {
+          0: ['y3_joint_curriculum', 'y3s0_bio'],
+          1: ['y3_mock_interview', 'y3s1_bio'],
+          2: ['y3_research_report', 'y3s2_bio'],
+          3: ['y3_exam_pressure', 'y3s3_bio'],
+          4: ['y3_portfolio_expo', 'y3s4_bio']
+        }
+      },
+      social: {
+        year2: {
+          0: ['y2_course_registration', 'y2s0_social'],
+          1: ['y2_min_achievement_crisis', 'y2s1_social'],
+          2: ['y2_mock_exam_slump', 'y2s2_social'],
+          3: ['y2_small_class_crisis', 'y2s3_social'],
+          4: ['y2_festival_prep', 'y2s4_social']
+        },
+        year3: {
+          0: ['y3_joint_curriculum', 'y3s0_social'],
+          1: ['y3_mock_interview', 'y3s1_social'],
+          2: ['y3_research_report', 'y3s2_social'],
+          3: ['y3_exam_pressure', 'y3s3_social'],
+          4: ['y3_portfolio_expo', 'y3s4_social']
+        }
+      },
+      art: {
+        year2: {
+          0: ['y2_course_registration', 'y2s0_art'],
+          1: ['y2_min_achievement_crisis', 'y2s1_art'],
+          2: ['y2_mock_exam_slump', 'y2s2_art'],
+          3: ['y2_small_class_crisis', 'y2s3_art'],
+          4: ['y2_festival_prep', 'y2s4_art']
+        },
+        year3: {
+          0: ['y3_joint_curriculum', 'y3s0_art'],
+          1: ['y3_mock_interview', 'y3s1_art'],
+          2: ['y3_research_report', 'y3s2_art'],
+          3: ['y3_exam_pressure', 'y3s3_art'],
+          4: ['y3_portfolio_expo', 'y3s4_art']
+        }
+      }
+    }
+  },
+
   // 48 Wave 스케줄러 (2022 개정 정식 교과목 배정)
   waveSchedule: [
     // === 1학년 (Wave 1 ~ 16) : 공통과목 중심 ===
     { wave: 1, type: 'battle', subjectId: 'korean_common1' },
     { wave: 2, type: 'battle', subjectId: 'math_common1' },
-    { wave: 3, type: 'event', eventId: 'y1_club_interview' },
+    { wave: 3, type: 'event', eventSlot: 0 },
     { wave: 4, type: 'battle', subjectId: 'english_common1' },
     { wave: 5, type: 'battle', subjectId: 'soc_common1' },
-    { wave: 6, type: 'event', eventId: 'y1_assignment_hell' },
+    { wave: 6, type: 'event', eventSlot: 1 },
     { wave: 7, type: 'battle', subjectId: 'sci_common1' },
     { wave: 8, type: 'battle', subjectId: 'korean_history1' },
-    { wave: 9, type: 'event', eventId: 'y1_midterm_stress' },
+    { wave: 9, type: 'event', eventSlot: 2 },
     { wave: 10, type: 'battle', subjectId: 'tech_home' },
     { wave: 11, type: 'battle', subjectId: 'music_art' },
-    { wave: 12, type: 'event', eventId: 'y1_peer_dilemma' },
+    { wave: 12, type: 'event', eventSlot: 3 },
     { wave: 13, type: 'battle', subjectId: 'sci_exp1' },
     { wave: 14, type: 'battle', subjectId: 'pe1' },
-    { wave: 15, type: 'event', eventId: 'y1_course_survey' },
+    { wave: 15, type: 'event', eventSlot: 4 },
     { wave: 16, type: 'boss', bossIndex: 0 }, // 👑 1학년 학업평가전 보스
 
-    // === 2학년 (Wave 17 ~ 32) : 일반선택 중심 ===
-    { wave: 17, type: 'battle', subjectId: 'algebra' }, // 대수 (구 수학Ⅰ)
-    { wave: 18, type: 'battle', subjectId: 'physics' }, // 물리학
-    { wave: 19, type: 'event', eventId: 'y2_course_registration' },
-    { wave: 20, type: 'battle', subjectId: 'chemistry' }, // 화학
-    { wave: 21, type: 'battle', subjectId: 'biology' }, // 생명과학
-    { wave: 22, type: 'event', eventId: 'y2_min_achievement_crisis' },
-    { wave: 23, type: 'battle', subjectId: 'global_geo' }, // 세계시민과 지리
-    { wave: 24, type: 'battle', subjectId: 'world_history' }, // 세계사
-    { wave: 25, type: 'event', eventId: 'y2_mock_exam_slump' },
-    { wave: 26, type: 'battle', subjectId: 'info' }, // 정보
-    { wave: 27, type: 'battle', subjectId: 'soc_culture' }, // 사회와 문화
-    { wave: 28, type: 'event', eventId: 'y2_small_class_crisis' },
-    { wave: 29, type: 'battle', subjectId: 'calculus1' }, // 미적분Ⅰ (구 수학Ⅱ)
-    { wave: 30, type: 'battle', subjectId: 'earth_sci' }, // 지구과학
-    { wave: 31, type: 'event', eventId: 'y2_festival_prep' },
+    // === 2학년 (Wave 17 ~ 32) : 일반선택 중심 (트랙별 조합은 trackSubjectRoutes/eventRoutes 참조) ===
+    { wave: 17, type: 'battle', trackSlot: 0 },
+    { wave: 18, type: 'battle', trackSlot: 1 },
+    { wave: 19, type: 'event', eventSlot: 0 },
+    { wave: 20, type: 'battle', trackSlot: 2 },
+    { wave: 21, type: 'battle', trackSlot: 3 },
+    { wave: 22, type: 'event', eventSlot: 1 },
+    { wave: 23, type: 'battle', trackSlot: 4 },
+    { wave: 24, type: 'battle', trackSlot: 5 },
+    { wave: 25, type: 'event', eventSlot: 2 },
+    { wave: 26, type: 'battle', trackSlot: 6 },
+    { wave: 27, type: 'battle', trackSlot: 7 },
+    { wave: 28, type: 'event', eventSlot: 3 },
+    { wave: 29, type: 'battle', trackSlot: 8 },
+    { wave: 30, type: 'battle', trackSlot: 9 },
+    { wave: 31, type: 'event', eventSlot: 4 },
     { wave: 32, type: 'boss', bossIndex: 1 }, // 👑 2학년 학업설계 심사 보스
 
-    // === 3학년 (Wave 33 ~ 48) : 진로선택 & 융합선택 중심 ===
-    { wave: 33, type: 'battle', subjectId: 'ai_basic' }, // 인공지능 기초 (진로)
-    { wave: 34, type: 'battle', subjectId: 'calculus2' }, // 미적분Ⅱ (진로)
-    { wave: 35, type: 'event', eventId: 'y3_joint_curriculum' },
-    { wave: 36, type: 'battle', subjectId: 'quantum_em' }, // 전자기와 양자 (진로)
-    { wave: 37, type: 'battle', subjectId: 'politics_law_soc' }, // 정치·법과 사회 (진로)
-    { wave: 38, type: 'event', eventId: 'y3_mock_interview' },
-    { wave: 39, type: 'battle', subjectId: 'media_comm' }, // 매체 의사소통 (융합)
-    { wave: 40, type: 'battle', subjectId: 'robotics_eng' }, // 로봇과 공학세계 (진로)
-    { wave: 41, type: 'event', eventId: 'y3_research_report' },
-    { wave: 42, type: 'battle', subjectId: 'intl_relations' }, // 국제 관계의 이해 (진로)
-    { wave: 43, type: 'battle', subjectId: 'gene_heredity' }, // 생물의 유전 (진로)
-    { wave: 44, type: 'event', eventId: 'y3_exam_pressure' },
-    { wave: 45, type: 'battle', subjectId: 'music_media' }, // 음악과 미디어 (융합)
-    { wave: 46, type: 'battle', subjectId: 'social_problem' }, // 사회문제 탐구 (융합)
-    { wave: 47, type: 'event', eventId: 'y3_portfolio_expo' },
+    // === 3학년 (Wave 33 ~ 48) : 진로선택 & 융합선택 중심 (트랙별 조합은 trackSubjectRoutes/eventRoutes 참조) ===
+    { wave: 33, type: 'battle', trackSlot: 0 },
+    { wave: 34, type: 'battle', trackSlot: 1 },
+    { wave: 35, type: 'event', eventSlot: 0 },
+    { wave: 36, type: 'battle', trackSlot: 2 },
+    { wave: 37, type: 'battle', trackSlot: 3 },
+    { wave: 38, type: 'event', eventSlot: 1 },
+    { wave: 39, type: 'battle', trackSlot: 4 },
+    { wave: 40, type: 'battle', trackSlot: 5 },
+    { wave: 41, type: 'event', eventSlot: 2 },
+    { wave: 42, type: 'battle', trackSlot: 6 },
+    { wave: 43, type: 'battle', trackSlot: 7 },
+    { wave: 44, type: 'event', eventSlot: 3 },
+    { wave: 45, type: 'battle', trackSlot: 8 },
+    { wave: 46, type: 'battle', trackSlot: 9 },
+    { wave: 47, type: 'event', eventSlot: 4 },
     { wave: 48, type: 'boss', bossIndex: 2 } // 👑 3학년 최종 졸업 사정회 보스
   ],
 
@@ -265,6 +364,18 @@ const GAME_DATA = {
           options: ['주장과 근거의 타당성을 평가하며 읽기', '교과서 본문 기계적 암기', '맞춤법 규정만 외우기', '친구 의견 무조건 비난'],
           ans: 0,
           exp: '글의 논리적 구조와 타당성을 주체적으로 검증하는 태도가 핵심입니다.'
+        },
+        {
+          q: '상황과 맥락에 맞게 적절한 언어를 사용하는 화법 능력을 무엇이라 하는가?',
+          options: ['화용적 언어 사용 능력', '맞춤법 검사기 사용법', '한자 급수 시험', '국어사전 통째로 외우기'],
+          ans: 0,
+          exp: '담화 상황과 맥락을 고려해 언어를 사용하는 능력을 화용 능력이라 합니다.'
+        },
+        {
+          q: '문학 작품을 그것이 쓰인 시대적 배경과 사회 상황을 고려하여 해석하는 관점은?',
+          options: ['반영론적 관점(역사·사회적 관점)', '절대주의적 관점', '작가를 배제한 관점', '무작위 해석 관점'],
+          ans: 0,
+          exp: '작품과 시대적 현실의 관계를 중심으로 해석하는 것이 반영론적 관점입니다.'
         }
       ]
     },
@@ -286,6 +397,18 @@ const GAME_DATA = {
           options: ['행렬(Matrix)', '구면삼각법', '텐서(Tensor)', '미분방정식'],
           ans: 0,
           exp: '공통수학1에는 인공지능과 데이터 처리의 기초가 되는 행렬이 부활 도입되었습니다.'
+        },
+        {
+          q: '이차함수 y=ax²+bx+c의 그래프가 x축과 만나는 점의 개수를 판별할 때 사용하는 것은?',
+          options: ['판별식(b²-4ac)', '피타고라스 정리', '로그의 성질', '삼각비'],
+          ans: 0,
+          exp: '판별식의 값에 따라 이차방정식의 실근 개수가 결정됩니다.'
+        },
+        {
+          q: '공통수학1에서 다항식의 연산과 이차함수를 배우는 근본적인 목적은?',
+          options: ['실생활 문제를 수학적으로 모델링하는 능력 함양', '단순 계산 반복 훈련', '암산 대회 준비', '한자 숙어 암기'],
+          ans: 0,
+          exp: '수학적 모델링 능력은 다양한 실생활 문제 해결의 기초가 됩니다.'
         }
       ]
     },
@@ -307,6 +430,18 @@ const GAME_DATA = {
           options: ['"I see your point, but consider this perspective..."', '"You are totally wrong."', '"I don\'t care."', '"Stop talking."'],
           ans: 0,
           exp: '상대방의 의견을 존중하며 완곡하게 대안을 제시하는 것이 성숙한 소통입니다.'
+        },
+        {
+          q: '영어 지문의 핵심 내용을 문단별로 요약할 때 가장 먼저 파악해야 할 것은?',
+          options: ['주제문(Main idea)과 이를 뒷받침하는 문장 구분', '모든 단어를 그대로 옮겨쓰기', '문법 용어만 나열', '접속사 개수 세기'],
+          ans: 0,
+          exp: '주제문과 뒷받침 문장을 구분하면 글의 핵심을 빠르게 파악할 수 있습니다.'
+        },
+        {
+          q: '다음 중 원인과 결과의 관계를 나타내는 연결어로 적절한 것은?',
+          options: ['Therefore / As a result', 'However', 'In contrast', 'On the other hand'],
+          ans: 0,
+          exp: 'Therefore, as a result는 인과관계를 나타내는 대표적인 연결어입니다.'
         }
       ]
     },
@@ -328,6 +463,18 @@ const GAME_DATA = {
           options: ['사주명리학적 관점', '시간적 관점', '공간적 관점', '윤리적 관점'],
           ans: 0,
           exp: '통합사회 4대 관점은 시간적, 공간적, 사회적, 윤리적 관점입니다.'
+        },
+        {
+          q: '다음 중 사회현상을 "공간적 관점"에서 탐구하는 질문으로 가장 적절한 것은?',
+          options: ['이 현상은 어느 지역에서, 왜 그곳에서 발생했는가?', '이 현상은 옳고 그른가?', '이 현상은 언제부터 시작되었는가?', '이 현상은 사회 구조와 어떤 관련이 있는가?'],
+          ans: 0,
+          exp: '공간적 관점은 위치, 분포, 지역 특성을 중심으로 현상을 살핍니다.'
+        },
+        {
+          q: '통합사회가 궁극적으로 지향하는 인간상은?',
+          options: ['시민성을 갖춘 민주 시민', '단편적 지식을 암기한 사람', '경쟁에서 승리하는 사람', '특정 이념만을 따르는 사람'],
+          ans: 0,
+          exp: '통합사회는 지속가능한 삶을 위한 민주 시민성 함양을 목표로 합니다.'
         }
       ]
     },
@@ -349,6 +496,18 @@ const GAME_DATA = {
           options: ['빅뱅 우주론', '지동설', '천동설', '판구조론'],
           ans: 0,
           exp: '빅뱅 우주론에 따라 우주 초기 수소와 헬륨이 생성되었습니다.'
+        },
+        {
+          q: '세포막으로 둘러싸인, 생명체를 이루는 최소 단위 구조는?',
+          options: ['세포(Cell)', '원자', '분자', '조직'],
+          ans: 0,
+          exp: '세포는 생명 활동이 일어나는 가장 작은 기본 단위입니다.'
+        },
+        {
+          q: '에너지가 새로 생성되거나 소멸하지 않고 형태만 바뀐다는 물리 법칙은?',
+          options: ['에너지 보존 법칙', '엔트로피 감소 법칙', '만유인력 법칙', '관성의 법칙'],
+          ans: 0,
+          exp: '에너지는 다른 형태로 전환될 뿐 총량은 항상 보존됩니다.'
         }
       ]
     },
@@ -370,6 +529,18 @@ const GAME_DATA = {
           options: ['대한민국 임시정부', '조선총독부', '통신기획단', '의정부'],
           ans: 0,
           exp: '3·1 운동을 계기로 상하이에 대한민국 임시정부가 수립되었습니다.'
+        },
+        {
+          q: '1919년, 일제의 무단통치에 저항해 전국적으로 일어난 대규모 만세 시위는?',
+          options: ['3·1 운동', '동학농민운동', '갑신정변', '6월 민주항쟁'],
+          ans: 0,
+          exp: '3·1 운동은 민족 자결의 의지를 세계에 알린 대규모 독립운동입니다.'
+        },
+        {
+          q: '고려의 중서문하성, 조선의 의정부처럼 국정을 총괄한 최고 통치 기구의 공통된 성격은?',
+          options: ['중앙 최고 관서(국정 총괄 기구)', '지방 행정 기구', '군사 훈련 기관', '외교 사절단'],
+          ans: 0,
+          exp: '두 기구 모두 각 시대 국정을 총괄한 중앙 최고 관서였습니다.'
         }
       ]
     },
@@ -391,6 +562,18 @@ const GAME_DATA = {
           options: ['생애 재무 및 생애주기 설계', '충동 소비', '복권 무한 구매', '무계획 지출'],
           ans: 0,
           exp: '생애주기별 목표와 위험 관리를 계획하는 것이 생애 설계입니다.'
+        },
+        {
+          q: '청소년기에 예산을 세우고 필요와 욕구를 구분하며 소비하는 태도를 무엇이라 하는가?',
+          options: ['합리적 소비', '무조건적 과시 소비', '타인 모방 소비', '무계획 충동구매'],
+          ans: 0,
+          exp: '필요와 욕구를 구분해 예산 안에서 소비하는 것이 합리적 소비입니다.'
+        },
+        {
+          q: '제품의 규격을 통일하여 부품의 호환성과 생산 효율을 높이는 것은?',
+          options: ['표준화(Standardization)', '맞춤 소량 생산', '규격 다양화', '품질 저하'],
+          ans: 0,
+          exp: '표준화는 호환성을 높이고 생산·유지보수 비용을 낮춥니다.'
         }
       ]
     },
@@ -412,6 +595,18 @@ const GAME_DATA = {
           options: ['심미적 감성과 창의적 표현력', '단순 테크닉 암기', '화가 이름 외우기', '그림 복제 기술'],
           ans: 0,
           exp: '예술을 통한 공감과 창의적 감수성 함양이 핵심입니다.'
+        },
+        {
+          q: '미술 작품에서 색채, 형태, 질감 등을 활용해 작가의 의도를 시각적으로 표현하는 원리는?',
+          options: ['조형 원리를 활용한 표현', '무작위 낙서', '단순 색칠 공부', '사진을 그대로 베끼기'],
+          ans: 0,
+          exp: '조형 원리를 이해하고 활용하면 의도를 효과적으로 표현할 수 있습니다.'
+        },
+        {
+          q: '음악에서 일정한 박자와 강약이 반복되며 곡의 흐름을 이끄는 기본 요소는?',
+          options: ['리듬(Rhythm)', '가사', '악기 브랜드', '공연장 크기'],
+          ans: 0,
+          exp: '리듬은 음악을 구성하는 가장 기본적인 요소 중 하나입니다.'
         }
       ]
     },
@@ -433,6 +628,18 @@ const GAME_DATA = {
           options: ['조작 변인(Independent Variable)', '통제 변인', '종속 변인', '외부 노이즈'],
           ans: 0,
           exp: '실험자가 조작하는 원인이 되는 변인을 조작 변인이라 합니다.'
+        },
+        {
+          q: '다른 변인의 영향을 배제하기 위해 실험 중 일정하게 유지하는 변인은?',
+          options: ['통제 변인(Controlled Variable)', '조작 변인', '종속 변인', '무작위 변인'],
+          ans: 0,
+          exp: '통제 변인을 일정하게 유지해야 실험 결과의 신뢰성이 높아집니다.'
+        },
+        {
+          q: '조작 변인의 변화에 따라 측정되어 결과로 나타나는 변인은?',
+          options: ['종속 변인(Dependent Variable)', '통제 변인', '독립 변인', '무관 변인'],
+          ans: 0,
+          exp: '종속 변인은 조작 변인의 변화 결과로서 관찰·측정되는 값입니다.'
         }
       ]
     },
@@ -454,6 +661,18 @@ const GAME_DATA = {
           options: ['규칙적인 운동과 체력·건강 관리', '하루 2시간 자고 공부하기', '에너지 음료 매일 마시기', '끼니 거르기'],
           ans: 0,
           exp: '지속 가능한 학업을 위해서는 신체적·정신적 건강 관리가 최우선입니다.'
+        },
+        {
+          q: '심장과 폐의 기능을 향상시켜 지구력을 기르는 대표적인 운동 유형은?',
+          options: ['유산소성 운동', '순간적인 무산소 운동만', '정적 스트레칭만', '장시간 수면'],
+          ans: 0,
+          exp: '유산소성 운동은 심폐 기능을 향상시켜 지구력을 길러줍니다.'
+        },
+        {
+          q: '운동 전 부상을 예방하고 신체를 미리 준비시키기 위해 반드시 필요한 과정은?',
+          options: ['충분한 준비운동(warm-up)', '바로 전력 질주', '식사 직후 격렬한 운동', '준비 없이 시작'],
+          ans: 0,
+          exp: '준비운동은 근육과 관절을 예열해 부상 위험을 크게 줄입니다.'
         }
       ]
     },
@@ -477,6 +696,18 @@ const GAME_DATA = {
           options: ['대수(Algebra)', '기하', '확률과 통계', '실용 수학'],
           ans: 0,
           exp: '2022 개정 교육과정에서는 2015의 수학Ⅰ이 ‘대수’로 개편되었습니다.'
+        },
+        {
+          q: '등차수열의 일반항 an = a1 + (n-1)d에서 d가 의미하는 것은?',
+          options: ['공차(common difference)', '공비', '첫째항', '항의 개수'],
+          ans: 0,
+          exp: 'd는 이웃한 항끼리의 일정한 차이인 공차를 뜻합니다.'
+        },
+        {
+          q: '직각삼각형에서 빗변에 대한 높이의 비를 나타내는 삼각함수는?',
+          options: ['sin(사인)', 'cos(코사인)', 'tan(탄젠트)', 'cot(코탄젠트)'],
+          ans: 0,
+          exp: 'sin은 빗변 대비 높이(마주보는 변)의 비를 나타냅니다.'
         }
       ]
     },
@@ -498,6 +729,18 @@ const GAME_DATA = {
           options: ['F = ma', 'E = mc²', 'V = IR', 'P = IV'],
           ans: 0,
           exp: '힘(F)은 질량(m)과 가속도(a)의 곱과 같습니다.'
+        },
+        {
+          q: '물체에 힘이 작용하지 않으면 정지 상태나 등속도 운동을 계속 유지한다는 법칙은?',
+          options: ['관성의 법칙(뉴턴 제1법칙)', '작용·반작용 법칙', '에너지 보존 법칙', '만유인력 법칙'],
+          ans: 0,
+          exp: '외부 힘이 없으면 물체는 원래의 운동 상태를 그대로 유지합니다.'
+        },
+        {
+          q: '전압(V), 전류(I), 저항(R)의 관계를 나타내는 옴의 법칙 공식은?',
+          options: ['V = IR', 'F = ma', 'E = mc²', 'P = mgh'],
+          ans: 0,
+          exp: '옴의 법칙에 따라 전압은 전류와 저항의 곱과 같습니다.'
         }
       ]
     },
@@ -519,6 +762,18 @@ const GAME_DATA = {
           options: ['원자(Atom)', '분자', '이온', '화합물'],
           ans: 0,
           exp: '물질의 기본 입자는 원자입니다.'
+        },
+        {
+          q: '원소들을 원자번호 순서와 화학적 성질에 따라 규칙적으로 배열한 표는?',
+          options: ['주기율표(Periodic Table)', '성적표', '좌표평면', '유전자 지도'],
+          ans: 0,
+          exp: '주기율표는 원소의 성질을 체계적으로 파악할 수 있게 해줍니다.'
+        },
+        {
+          q: '산과 염기가 반응하여 물과 염을 생성하는 반응을 무엇이라 하는가?',
+          options: ['중화반응(Neutralization)', '산화반응', '핵분열반응', '광합성 반응'],
+          ans: 0,
+          exp: '산과 염기가 만나면 중화반응이 일어나 물과 염이 생성됩니다.'
         }
       ]
     },
@@ -540,6 +795,18 @@ const GAME_DATA = {
           options: ['DNA', 'ATP', '포도당', '헤모글로빈'],
           ans: 0,
           exp: '유전 정보는 DNA(디옥시리보핵산)에 저장됩니다.'
+        },
+        {
+          q: '생명체가 세포 호흡을 통해 얻어 생명 활동에 직접 사용하는 에너지 화합물은?',
+          options: ['ATP', 'DNA', '포도당 그 자체', '산소 그 자체'],
+          ans: 0,
+          exp: 'ATP는 세포가 직접 사용할 수 있는 에너지 저장·전달 물질입니다.'
+        },
+        {
+          q: '부모의 형질이 자손에게 전달되는 원리를 연구하는 생명과학 분야는?',
+          options: ['유전학(Genetics)', '생태학', '분류학', '해부학'],
+          ans: 0,
+          exp: '유전학은 형질의 대물림과 변이를 다루는 학문입니다.'
         }
       ]
     },
@@ -561,6 +828,18 @@ const GAME_DATA = {
           options: ['판구조론(Plate Tectonics)', '천동설', '상대성 이론', '열역학 제1법칙'],
           ans: 0,
           exp: '지각 변동과 대륙 이동을 설명하는 핵심 이론은 판구조론입니다.'
+        },
+        {
+          q: '태양계에서 태양으로부터 세 번째 행성이며 현재 유일하게 생명체가 확인된 행성은?',
+          options: ['지구(Earth)', '화성', '금성', '목성'],
+          ans: 0,
+          exp: '지구는 태양계에서 생명체가 존재하는 것으로 확인된 유일한 행성입니다.'
+        },
+        {
+          q: '대기, 수권, 지권, 생물권이 서로 물질과 에너지를 주고받는다는 개념은?',
+          options: ['지구시스템(권역 간 상호작용)', '단일 폐쇄계', '정적 평형 상태', '무한 팽창 이론'],
+          ans: 0,
+          exp: '지구의 각 권역은 서로 영향을 주고받으며 하나의 시스템을 이룹니다.'
         }
       ]
     },
@@ -582,6 +861,18 @@ const GAME_DATA = {
           options: ['미적분Ⅰ (구 수학Ⅱ)', '기하', '대수', '확률과 통계'],
           ans: 0,
           exp: '2022 개정 교육과정에서는 2015의 수학Ⅱ가 ‘미적분Ⅰ’로 명칭 변경되었습니다.'
+        },
+        {
+          q: '함수 f(x) = x²을 미분하면 얻어지는 도함수는?',
+          options: ['2x', 'x', '2', 'x³'],
+          ans: 0,
+          exp: '미분법에 따라 x²의 도함수는 2x입니다.'
+        },
+        {
+          q: '정적분의 값이 그래프에서 나타내는 기하학적 의미는?',
+          options: ['곡선과 x축 사이의 넓이', '곡선의 기울기', '원의 둘레', '두 점의 좌표'],
+          ans: 0,
+          exp: '정적분은 구간에서 곡선과 x축이 이루는 넓이를 나타냅니다.'
         }
       ]
     },
@@ -603,6 +894,18 @@ const GAME_DATA = {
           options: ['알고리즘(Algorithm)', '인터페이스', '컴파일러', '데이터베이스'],
           ans: 0,
           exp: '문제 해결 절차와 규칙을 알고리즘이라고 합니다.'
+        },
+        {
+          q: '0과 1, 두 가지 상태만으로 정보를 표현하는 컴퓨터의 기본 진법은?',
+          options: ['이진법(Binary)', '십진법', '로마 숫자', '한자 숫자'],
+          ans: 0,
+          exp: '컴퓨터는 전기 신호의 on/off를 0과 1로 표현하는 이진법을 사용합니다.'
+        },
+        {
+          q: '문제를 작은 단위로 나누어 같은 방식으로 반복 해결하는 알고리즘 설계 기법은?',
+          options: ['재귀(Recursion)/분할정복', '무작위 시도', '단순 나열', '무조건 암기'],
+          ans: 0,
+          exp: '분할정복은 큰 문제를 작은 부분 문제로 나누어 해결하는 방식입니다.'
         }
       ]
     },
@@ -624,6 +927,18 @@ const GAME_DATA = {
           options: ['문화 지체 (Cultural Lag)', '문화 융합', '문화 사대주의', '문화 상대주의'],
           ans: 0,
           exp: '기술 발전 속도에 제도가 미처 따르지 못하는 현상을 문화 지체라 합니다.'
+        },
+        {
+          q: '한 사회의 문화를 구성하는 대표적인 3요소로 옳은 것은?',
+          options: ['물질문화, 제도문화, 관념문화', '정치, 경제, 군사', '법, 도덕, 관습만 별개', '언어, 인종, 국적'],
+          ans: 0,
+          exp: '문화는 물질문화, 제도문화, 관념문화가 상호작용하며 이루어집니다.'
+        },
+        {
+          q: '서로 다른 문화가 접촉하며 각자의 고유성을 유지한 채 함께 공존하는 현상은?',
+          options: ['문화 병존(다문화)', '문화 동화', '문화 말살', '문화 고립'],
+          ans: 0,
+          exp: '문화 병존은 이질적인 문화가 나란히 공존하는 현상입니다.'
         }
       ]
     },
@@ -645,6 +960,18 @@ const GAME_DATA = {
           options: ['산업혁명', '프랑스대혁명', '르네상스', '종교개혁'],
           ans: 0,
           exp: '산업혁명은 기계의 발명으로 생산력의 혁신을 이끈 사건입니다.'
+        },
+        {
+          q: '1789년 절대왕정을 무너뜨리고 자유·평등·박애의 이념을 전 세계에 확산시킨 사건은?',
+          options: ['프랑스대혁명', '명예혁명', '신해혁명', '메이지유신'],
+          ans: 0,
+          exp: '프랑스대혁명은 근대 민주주의 이념 확산에 큰 영향을 끼쳤습니다.'
+        },
+        {
+          q: '고대부터 동서양의 교역과 문화 교류를 촉진했던 대표적인 육상 무역로는?',
+          options: ['실크로드(비단길)', '파나마 운하', '수에즈 운하', '베링 해협'],
+          ans: 0,
+          exp: '실크로드는 동서 문명을 이어준 대표적인 교역·문화 교류로였습니다.'
         }
       ]
     },
@@ -666,6 +993,150 @@ const GAME_DATA = {
           options: ['세계시민과 지리', '한국지리 탐구', '여행지리', '경제지리'],
           ans: 0,
           exp: '2022 개정 교육과정 사회과 일반선택 지리 과목명은 ‘세계시민과 지리’입니다.'
+        },
+        {
+          q: '지구 온난화 문제에 국제 사회가 공동 대응하기 위해 채택한 대표적인 기후 협약은?',
+          options: ['파리협정(Paris Agreement)', '베르사유조약', '카이로선언', '몬로선언'],
+          ans: 0,
+          exp: '파리협정은 온실가스 감축을 위한 국제 사회의 대표적 합의입니다.'
+        },
+        {
+          q: '한 지역의 기후·지형 등 자연환경이 주민의 생활양식에 미치는 영향을 탐구하는 관점은?',
+          options: ['자연환경과 인간생활의 상호작용', '자연현상은 인간과 무관하다는 관점', '정치 체제만 분석하는 관점', '경제 지표만 분석하는 관점'],
+          ans: 0,
+          exp: '지리 탐구는 자연환경과 인간 생활이 서로 영향을 주고받는다고 봅니다.'
+        }
+      ]
+    },
+    'geometry': {
+      id: 'geometry',
+      name: '기하',
+      element: 'logic',
+      category: 'general',
+      categoryName: '일반선택',
+      credits: 4,
+      hp: 310,
+      icon: '📏',
+      color: '#1e40af',
+      attackName: '평면·공간도형 좌표 임팩트',
+      attackDmg: 20,
+      quizzes: [
+        {
+          q: '2022 개정 수학 교과에서 벡터, 평면좌표, 공간도형과 이차곡선을 다루는 일반선택 과목은?',
+          options: ['기하(Geometry)', '대수', '미적분Ⅰ', '확률과 통계'],
+          ans: 0,
+          exp: '기하는 도형과 공간을 좌표와 벡터로 다루는 2022 개정 수학 일반선택 과목입니다.'
+        },
+        {
+          q: '평면 위에서 방향과 크기를 모두 가지며, 화살표로 표현되는 수학적 대상은?',
+          options: ['벡터(Vector)', '스칼라', '행렬', '수열'],
+          ans: 0,
+          exp: '벡터는 크기와 방향을 함께 나타내는 양입니다.'
+        },
+        {
+          q: '원, 타원, 포물선, 쌍곡선처럼 원뿔을 평면으로 잘랐을 때 나타나는 곡선을 통칭하는 말은?',
+          options: ['이차곡선(원뿔곡선)', '직선', '다각형', '함수'],
+          ans: 0,
+          exp: '원뿔을 다양한 각도로 자르면 원, 타원, 포물선, 쌍곡선 등의 이차곡선이 나타납니다.'
+        }
+      ]
+    },
+    'modern_ethics': {
+      id: 'modern_ethics',
+      name: '현대사회와 윤리',
+      element: 'social',
+      category: 'general',
+      categoryName: '일반선택',
+      credits: 4,
+      hp: 290,
+      icon: '🧭',
+      color: '#fbbf24',
+      attackName: '윤리적 딜레마 성찰파',
+      attackDmg: 18,
+      quizzes: [
+        {
+          q: '생명공학기술의 발전으로 발생하는 윤리적 쟁점을 주로 다루는 응용윤리 분야는?',
+          options: ['생명윤리', '정보윤리', '환경윤리', '직업윤리'],
+          ans: 0,
+          exp: '생명윤리는 생명 관련 기술과 의료 행위의 도덕적 쟁점을 다룹니다.'
+        },
+        {
+          q: '인공지능·빅데이터 시대에 개인정보 보호와 알고리즘의 공정성을 다루는 윤리 분야는?',
+          options: ['정보윤리', '생명윤리', '환경윤리', '성 윤리'],
+          ans: 0,
+          exp: '정보윤리는 디지털 정보사회에서의 도덕적 책임을 다룹니다.'
+        },
+        {
+          q: '현대사회와 윤리에서 다루는 다양한 응용윤리 학습의 공통된 목표는?',
+          options: ['현실의 윤리적 딜레마에 대한 성찰과 실천적 해결', '과거 윤리학설의 단순 암기', '도덕적 판단의 회피', '타인의 의견 무조건 수용'],
+          ans: 0,
+          exp: '응용윤리는 실제 삶의 딜레마를 성찰하고 실천적 해법을 모색하는 것을 목표로 합니다.'
+        }
+      ]
+    },
+    'mechanics_energy': {
+      id: 'mechanics_energy',
+      name: '역학과 에너지',
+      element: 'nature',
+      category: 'general',
+      categoryName: '일반선택',
+      credits: 4,
+      hp: 305,
+      icon: '🔩',
+      color: '#0891b2',
+      attackName: '운동·에너지 충격파',
+      attackDmg: 19,
+      quizzes: [
+        {
+          q: '물체의 운동에서 위치 에너지와 운동 에너지의 합이 일정하게 유지된다는 법칙은?',
+          options: ['역학적 에너지 보존 법칙', '열역학 제2법칙', '전자기 유도 법칙', '케플러 법칙'],
+          ans: 0,
+          exp: '외력이 작용하지 않으면 역학적 에너지의 총합은 일정하게 보존됩니다.'
+        },
+        {
+          q: '힘이 물체에 작용하여 이동시킬 때, 힘과 이동 거리의 곱으로 정의되는 물리량은?',
+          options: ['일(Work)', '속도', '가속도', '질량'],
+          ans: 0,
+          exp: '일은 힘과 그 힘의 방향으로 이동한 거리의 곱으로 정의됩니다.'
+        },
+        {
+          q: '물체가 등속 원운동을 할 때, 원의 중심 방향으로 작용하는 힘은?',
+          options: ['구심력', '원심력(실재하는 힘)', '마찰력', '부력'],
+          ans: 0,
+          exp: '구심력은 물체를 원의 중심 방향으로 끌어당겨 원운동을 유지시킵니다.'
+        }
+      ]
+    },
+    'fusion_science_inquiry': {
+      id: 'fusion_science_inquiry',
+      name: '융합과학탐구',
+      element: 'fusion',
+      category: 'general',
+      categoryName: '일반선택',
+      credits: 4,
+      hp: 300,
+      icon: '🧩',
+      color: '#c026d3',
+      attackName: '통합 탐구 융합파',
+      attackDmg: 19,
+      quizzes: [
+        {
+          q: '기후변화처럼 물리·화학·생물·지구과학 여러 분야가 얽힌 문제를 통합적으로 탐구하는 접근은?',
+          options: ['융합적 과학 탐구', '단일 분야 암기', '실험 없이 추측', '한 과목만 고집하는 탐구'],
+          ans: 0,
+          exp: '복합적인 문제는 여러 과학 분야를 융합해 통합적으로 접근해야 합니다.'
+        },
+        {
+          q: '가설을 세우고 실험으로 검증한 뒤 결론을 도출하는 과학적 탐구의 기본 절차는?',
+          options: ['가설 설정 → 실험 검증 → 결론 도출', '무작위 시도', '직감에 의한 결론', '타인 결과 무단 복제'],
+          ans: 0,
+          exp: '과학적 탐구는 체계적인 가설-검증-결론의 절차를 따릅니다.'
+        },
+        {
+          q: '서로 다른 과학 분야의 개념을 연결해 새로운 문제를 해결하는 능력을 무엇이라 하는가?',
+          options: ['융합적 사고력', '단편적 지식 나열', '분야 간 배타적 구분', '기계적 반복 학습'],
+          ans: 0,
+          exp: '융합적 사고력은 여러 분야의 지식을 연결해 새로운 해법을 찾는 역량입니다.'
         }
       ]
     },
@@ -689,6 +1160,18 @@ const GAME_DATA = {
           options: ['머신러닝 & 딥러닝', '단순 수동 코딩', '인터넷 캐싱', '파일 압축'],
           ans: 0,
           exp: '데이터로부터 모델이 패턴을 학습하는 인공지능 분야를 머신러닝이라 부릅니다.'
+        },
+        {
+          q: '인공신경망이 학습 데이터에 지나치게 맞춰져 새로운 데이터에는 성능이 떨어지는 현상은?',
+          options: ['과적합(Overfitting)', '과소적합', '정상 학습', '완전한 일반화'],
+          ans: 0,
+          exp: '과적합은 학습 데이터에만 특화되어 일반화 성능이 낮아지는 문제입니다.'
+        },
+        {
+          q: '이미지 속 사물을 인식하고 분류하는 대표적인 딥러닝 신경망 구조는?',
+          options: ['합성곱 신경망(CNN)', '엑셀 스프레드시트', '워드프로세서', '단순 계산기'],
+          ans: 0,
+          exp: 'CNN은 이미지의 공간적 특징을 추출하는 데 특화된 신경망입니다.'
         }
       ]
     },
@@ -710,6 +1193,18 @@ const GAME_DATA = {
           options: ['미적분Ⅱ (구 미적분)', '미적분Ⅰ', '기하', '대수'],
           ans: 0,
           exp: '2022 개정 교육과정에서는 이공계 심화 초월함수 미적분을 ‘미적분Ⅱ’(진로선택)에서 다룹니다.'
+        },
+        {
+          q: '자연로그의 밑으로 사용되며, 미분해도 자기 자신이 되는 지수함수와 관련된 상수는?',
+          options: ['오일러 수 e', '원주율 π', '황금비 φ', '허수 단위 i'],
+          ans: 0,
+          exp: 'e는 자연로그의 밑으로, e^x는 미분해도 형태가 변하지 않습니다.'
+        },
+        {
+          q: '함수의 극값(최댓값/최솟값)을 구할 때, 도함수 값이 0이 되는 지점을 무엇이라 하는가?',
+          options: ['임계점(극값 후보)', '접점', '원점', '교점'],
+          ans: 0,
+          exp: '도함수가 0이 되는 임계점에서 극값이 나타날 수 있습니다.'
         }
       ]
     },
@@ -731,6 +1226,18 @@ const GAME_DATA = {
           options: ['센서(Sensor)', '배터리', '외관 커버', '바퀴'],
           ans: 0,
           exp: '센서는 빛, 거리, 온도 등을 측정하여 로봇 제어기에 전달합니다.'
+        },
+        {
+          q: '로봇의 관절을 움직여 실제 물리적 동작을 만들어내는 구동 장치는?',
+          options: ['액추에이터(Actuator)', '센서', '배터리 팩', '디스플레이'],
+          ans: 0,
+          exp: '액추에이터는 전기 신호를 받아 실제 움직임을 만들어내는 구동부입니다.'
+        },
+        {
+          q: '공학 설계 과정에서 문제를 정의한 후 가장 먼저 수행해야 할 단계는?',
+          options: ['요구사항 분석 및 아이디어 구상', '바로 완제품 생산', '예산 없이 무작정 제작', '설계도 없이 조립'],
+          ans: 0,
+          exp: '요구사항 분석과 아이디어 구상이 공학 설계의 첫 단계입니다.'
         }
       ]
     },
@@ -752,6 +1259,18 @@ const GAME_DATA = {
           options: ['양자역학(Quantum Mechanics)', '고전역학', '지구역학', '화학평형'],
           ans: 0,
           exp: '2022 개정 과학 진로선택 ‘전자기와 양자’에서 양자물리학의 기본 원리를 탐구합니다.'
+        },
+        {
+          q: '전기장과 자기장이 서로를 유도하며 공간을 퍼져나가는 파동은?',
+          options: ['전자기파(Electromagnetic Wave)', '음파', '지진파', '수면파'],
+          ans: 0,
+          exp: '전자기파는 전기장과 자기장이 서로 유도하며 진행하는 파동입니다.'
+        },
+        {
+          q: '빛이 입자처럼 행동하여 금속 표면에서 전자를 튀어나오게 하는 현상은?',
+          options: ['광전효과(Photoelectric Effect)', '도플러효과', '단순 굴절현상', '단순 반사현상'],
+          ans: 0,
+          exp: '광전효과는 빛의 입자성을 실증하는 대표적인 현상입니다.'
         }
       ]
     },
@@ -773,6 +1292,18 @@ const GAME_DATA = {
           options: ['크리스퍼 유전자 가위 (CRISPR-Cas9)', '단순 현미경 관찰', '세포 염색법', '단백질 침전법'],
           ans: 0,
           exp: '2022 개정 진로선택 ‘생물의 유전’에서 분자유전학과 유전자 가위 기술을 심층 탐구합니다.'
+        },
+        {
+          q: '부모의 유전 형질이 자손에게 전달되는 최소 단위로, DNA의 특정 부분을 무엇이라 하는가?',
+          options: ['유전자(Gene)', '세포막', '리보솜', '미토콘드리아'],
+          ans: 0,
+          exp: '유전자는 형질 정보를 담고 있는 DNA의 특정 부위입니다.'
+        },
+        {
+          q: '생식세포가 형성될 때 염색체 수가 절반으로 줄어드는 세포분열은?',
+          options: ['감수분열(Meiosis)', '체세포분열(Mitosis)', '무성생식', '이분법'],
+          ans: 0,
+          exp: '감수분열을 통해 생식세포의 염색체 수가 체세포의 절반이 됩니다.'
         }
       ]
     },
@@ -794,6 +1325,18 @@ const GAME_DATA = {
           options: ['헌법(Constitution)', '지방조례', '사규', '학급 규칙'],
           ans: 0,
           exp: '헌법은 국가의 최고 기본법입니다.'
+        },
+        {
+          q: '국가 권력을 입법·행정·사법으로 나누어 서로 견제하게 하는 민주주의 원리는?',
+          options: ['권력분립(삼권분립)', '권력 집중', '왕권신수설', '계엄통치'],
+          ans: 0,
+          exp: '권력분립은 권력 남용을 막기 위해 국가 기능을 나누어 견제하게 합니다.'
+        },
+        {
+          q: '법률이 헌법에 위반되는지를 심판하는 우리나라의 헌법기관은?',
+          options: ['헌법재판소', '대법원 단독', '국회', '지방자치단체'],
+          ans: 0,
+          exp: '헌법재판소는 법률의 위헌 여부 등을 심판하는 헌법기관입니다.'
         }
       ]
     },
@@ -815,6 +1358,18 @@ const GAME_DATA = {
           options: ['국제연합 (UN)', '국제올림픽위원회 (IOC)', '글로벌 팬클럽', '세계은행 단독'],
           ans: 0,
           exp: 'UN(국제연합)은 국제 평화와 안보를 주 목적으로 하는 글로벌 기구입니다.'
+        },
+        {
+          q: '국가 간 무역 장벽을 낮추고 자유로운 교역을 촉진하기 위해 체결하는 협정은?',
+          options: ['자유무역협정(FTA)', '관세 전면 금지법', '쇄국정책', '고립주의 선언'],
+          ans: 0,
+          exp: 'FTA는 국가 간 관세 및 무역 장벽을 완화하는 협정입니다.'
+        },
+        {
+          q: '국제사회에서 자국의 이익과 실리를 우선하여 접근하는 외교 방식은?',
+          options: ['현실주의 외교', '무조건적 이상주의', '완전한 고립주의', '무정부주의'],
+          ans: 0,
+          exp: '현실주의 외교는 국가 이익과 힘의 균형을 중시하는 접근입니다.'
         }
       ]
     },
@@ -836,6 +1391,18 @@ const GAME_DATA = {
           options: ['통계 데이터 분석 및 현장 설문·인터뷰 교차 검증', '인터넷 커뮤니티 댓글 인용', '개인적인 직감만으로 결론', '가짜 뉴스 인용'],
           ans: 0,
           exp: '체계적인 연구 방법론과 신뢰할 수 있는 데이터 수집이 사회문제 탐구의 핵심입니다.'
+        },
+        {
+          q: '저출산·고령화처럼 인구 구조 변화로 인한 사회문제를 탐구할 때 가장 필요한 자료는?',
+          options: ['통계청 등 공신력 있는 인구 통계 자료', '근거 없는 소문', '개인 블로그 후기만', '연예인 SNS 게시물'],
+          ans: 0,
+          exp: '공신력 있는 통계 자료를 근거로 삼아야 신뢰할 수 있는 분석이 가능합니다.'
+        },
+        {
+          q: '사회문제 탐구보고서를 작성할 때 연구자가 반드시 지켜야 할 연구 윤리는?',
+          options: ['데이터를 조작하지 않고 출처를 밝혀 인용하기', '유리한 데이터만 골라 조작하기', '타인의 연구를 표절하기', '결과를 임의로 바꾸기'],
+          ans: 0,
+          exp: '출처를 정확히 밝히고 데이터를 조작하지 않는 것이 연구 윤리의 기본입니다.'
         }
       ]
     },
@@ -857,6 +1424,18 @@ const GAME_DATA = {
           options: ['디지털 미디어 리터러시', '단순 카피 페이스트', '어그로 클릭 유도', '스팸 발송'],
           ans: 0,
           exp: '2022 개정 국어과 융합선택 ‘매체 의사소통’은 미디어 리터러시와 윤리적 제작 역량을 기릅니다.'
+        },
+        {
+          q: '뉴스나 정보의 출처와 사실 여부를 다른 자료와 교차 확인하는 과정을 무엇이라 하는가?',
+          options: ['팩트체크(Fact-check)', '무조건적 신뢰', '출처 무시', '무조건 재전송'],
+          ans: 0,
+          exp: '팩트체크는 정보의 진위를 검증하는 미디어 리터러시의 핵심 과정입니다.'
+        },
+        {
+          q: '1인 미디어 콘텐츠 제작 시 저작권과 초상권을 존중하는 태도는 어떤 역량에 해당하는가?',
+          options: ['미디어 윤리 및 법적 책임 의식', '조회수만 극대화하는 전략', '타인 콘텐츠 무단 도용', '허위 정보 유포'],
+          ans: 0,
+          exp: '콘텐츠 제작에는 법적·윤리적 책임을 지는 태도가 반드시 필요합니다.'
         }
       ]
     },
@@ -878,6 +1457,150 @@ const GAME_DATA = {
           options: ['미디어 사운드트랙 & 효과음 디자인', '단순 악보 필사', '무음 방송', '소음 발생'],
           ans: 0,
           exp: '2022 개정 예술 융합선택 ‘음악과 미디어’는 디지털 미디어 속 음악의 창작과 융합을 다룹니다.'
+        },
+        {
+          q: '영화나 게임의 특정 장면에서 감정을 극대화하기 위해 삽입되는 배경음악을 무엇이라 하는가?',
+          options: ['스코어(Score)/배경음악', '메인 테마 가사', '자막', '엔딩 크레딧 텍스트'],
+          ans: 0,
+          exp: '스코어는 장면의 분위기와 감정을 강화하는 배경음악을 뜻합니다.'
+        },
+        {
+          q: '디지털 음원을 컴퓨터로 작곡·편집·믹싱할 때 사용하는 소프트웨어를 통칭하는 용어는?',
+          options: ['DAW(Digital Audio Workstation)', '워드프로세서', '스프레드시트', '웹 브라우저'],
+          ans: 0,
+          exp: 'DAW는 디지털 음악 제작에 특화된 소프트웨어 환경입니다.'
+        }
+      ]
+    },
+    'economics': {
+      id: 'economics',
+      name: '경제',
+      element: 'social',
+      category: 'career',
+      categoryName: '진로선택',
+      credits: 4,
+      hp: 365,
+      icon: '💰',
+      color: '#ca8a04',
+      attackName: '수요·공급 시장 충격',
+      attackDmg: 22,
+      quizzes: [
+        {
+          q: '가격이 오르면 수요량이 줄고, 가격이 내리면 수요량이 늘어나는 일반적 관계는?',
+          options: ['수요의 법칙', '공급의 법칙', '희소성의 원칙', '기회비용의 법칙'],
+          ans: 0,
+          exp: '수요의 법칙은 가격과 수요량이 반대로 움직이는 일반적 경향을 설명합니다.'
+        },
+        {
+          q: '한정된 자원으로 최선의 선택을 할 때, 포기해야 하는 다른 선택의 가치를 무엇이라 하는가?',
+          options: ['기회비용', '매몰비용', '고정비용', '명시적 비용'],
+          ans: 0,
+          exp: '기회비용은 하나를 선택함으로써 포기하게 되는 다른 대안의 가치입니다.'
+        },
+        {
+          q: '시장에서 수요와 공급이 일치하여 가격과 거래량이 결정되는 상태는?',
+          options: ['시장균형', '독점 상태', '완전경쟁 실패', '가격 통제 상태'],
+          ans: 0,
+          exp: '수요곡선과 공급곡선이 만나는 지점에서 시장균형 가격과 거래량이 정해집니다.'
+        }
+      ]
+    },
+    'chem_reactions_world': {
+      id: 'chem_reactions_world',
+      name: '화학 반응의 세계',
+      element: 'nature',
+      category: 'career',
+      categoryName: '진로선택',
+      credits: 4,
+      hp: 385,
+      icon: '⚗️',
+      color: '#0d9488',
+      attackName: '화학평형 반응 폭발',
+      attackDmg: 23,
+      quizzes: [
+        {
+          q: '화학반응의 속도에 영향을 주는 요인이 아닌 것은?',
+          options: ['반응물의 색깔', '온도', '농도', '촉매'],
+          ans: 0,
+          exp: '반응 속도는 온도, 농도, 촉매, 표면적 등에 영향을 받으며 색깔과는 무관합니다.'
+        },
+        {
+          q: '가역 반응에서 정반응과 역반응의 속도가 같아져 겉보기에 반응이 멈춘 것처럼 보이는 상태는?',
+          options: ['화학평형', '반응 종결', '촉매 소멸', '완전 반응'],
+          ans: 0,
+          exp: '화학평형 상태에서는 정반응과 역반응이 같은 속도로 계속 일어나고 있습니다.'
+        },
+        {
+          q: '반응 속도를 증가시키지만 반응 후에도 자신은 변하지 않는 물질은?',
+          options: ['촉매(Catalyst)', '생성물', '반응물', '부산물'],
+          ans: 0,
+          exp: '촉매는 활성화 에너지를 낮춰 반응 속도를 높이지만 자신은 소모되지 않습니다.'
+        }
+      ]
+    },
+    'ai_math': {
+      id: 'ai_math',
+      name: '인공지능 수학',
+      element: 'logic',
+      category: 'career',
+      categoryName: '진로선택',
+      credits: 4,
+      hp: 395,
+      icon: '🔢',
+      color: '#4f46e5',
+      attackName: '경사하강 최적화 연산파',
+      attackDmg: 24,
+      quizzes: [
+        {
+          q: '인공지능 수학에서 데이터를 벡터와 행렬로 표현해 연산하는 수학 분야는?',
+          options: ['선형대수(Linear Algebra)', '정수론', '집합론', '평면기하학'],
+          ans: 0,
+          exp: '선형대수는 인공지능 모델의 데이터 표현과 연산의 기초가 됩니다.'
+        },
+        {
+          q: '인공지능 모델이 예측 오차를 줄이기 위해 파라미터를 점진적으로 조정하는 최적화 기법은?',
+          options: ['경사하강법(Gradient Descent)', '완전 탐색법', '무작위 추측법', '고정값 대입법'],
+          ans: 0,
+          exp: '경사하강법은 오차를 줄이는 방향으로 파라미터를 반복적으로 조정하는 기법입니다.'
+        },
+        {
+          q: '불확실한 상황에서 특정 사건이 일어날 가능성을 수치로 나타낸 것은?',
+          options: ['확률(Probability)', '평균', '표준편차', '상관계수'],
+          ans: 0,
+          exp: '확률은 인공지능 모델의 예측과 판단에 널리 활용되는 핵심 개념입니다.'
+        }
+      ]
+    },
+    'literature_and_film': {
+      id: 'literature_and_film',
+      name: '문학과 영상',
+      element: 'fusion',
+      category: 'fusion',
+      categoryName: '융합선택',
+      credits: 4,
+      hp: 355,
+      icon: '🎥',
+      color: '#be185d',
+      attackName: '매체 전환 몽타주 임팩트',
+      attackDmg: 21,
+      quizzes: [
+        {
+          q: '소설이 영화로 각색될 때, 문자로 서술된 내용이 화면과 소리로 표현되는 과정을 무엇이라 하는가?',
+          options: ['매체 전환(각색)', '단순 복사', '원작 무시', '장르 파괴'],
+          ans: 0,
+          exp: '매체 전환은 문자 서사를 영상 언어로 옮기는 창작적 재구성 과정입니다.'
+        },
+        {
+          q: '문학과 영상을 비교 감상할 때, 영상 매체만이 가지는 고유한 표현 수단은?',
+          options: ['카메라 앵글과 편집, 음향', '인물의 심리 묘사', '비유와 상징', '서술자의 시점'],
+          ans: 0,
+          exp: '카메라 앵글, 편집, 음향은 문자로는 표현할 수 없는 영상만의 언어입니다.'
+        },
+        {
+          q: '원작 소설과 영화화된 작품을 비교할 때 가장 바람직한 감상 태도는?',
+          options: ['매체적 특성을 고려한 차이점과 공통점 분석', '원작과 다르면 무조건 실패로 평가', '영상은 무시하고 원작만 인정', '비교 없이 하나만 감상'],
+          ans: 0,
+          exp: '각 매체의 고유한 표현 방식을 이해하며 비교하는 것이 균형 잡힌 감상입니다.'
         }
       ]
     }
@@ -1225,6 +1948,519 @@ const GAME_DATA = {
           creditBonus: 3
         }
       ]
+    },
+
+    // ===== 1학년 추가 이벤트 (공통, 다회차 재플레이 변주용) =====
+    {
+      id: 'y1_seatmate_intro',
+      title: '짝꿍과의 첫 만남',
+      year: 1,
+      desc: '새 학기, 낯선 짝꿍과 한 학기를 함께 보내야 한다. 어떻게 다가갈까?',
+      choices: [
+        {
+          text: '먼저 다가가 서로의 관심사를 나누며 친해진다. [🤝 공동체 15 이상]',
+          reqStat: { stat: 'community', min: 15 },
+          resultText: '좋은 친구가 되어 학교생활이 즐거워졌습니다! 공동체 +15, 멘탈 +20 회복!',
+          statReward: { community: 15 },
+          mentalHeal: 20,
+          creditBonus: 3
+        },
+        {
+          text: '조용히 각자의 시간을 존중하며 지낸다. (조건 없음)',
+          resultText: '편안한 거리감으로 무난하게 지냈습니다. 자기주도 +10, 2학점.',
+          statReward: { selfDirected: 10 },
+          creditBonus: 2
+        }
+      ]
+    },
+    {
+      id: 'y1_group_project_conflict',
+      title: '조별 과제 무임승차 초기 갈등',
+      year: 1,
+      desc: '첫 조별 과제에서 한 명이 아무 의견도 내지 않고 있다. 마감은 다가온다.',
+      choices: [
+        {
+          text: '직접 찾아가 어려움이 있는지 물어보고 역할을 조정한다. [🤝 공동체 15 이상]',
+          reqStat: { stat: 'community', min: 15 },
+          resultText: '대화를 통해 팀워크가 살아났습니다! 공동체 +15, 학업 +10!',
+          statReward: { community: 15, academic: 10 },
+          creditBonus: 3
+        },
+        {
+          text: '남은 인원끼리 역할을 나눠 마무리한다. (조건 없음)',
+          resultText: '힘들었지만 제출은 무사히 마쳤습니다. 자기주도 +10, 2학점.',
+          statReward: { selfDirected: 10 },
+          creditBonus: 2
+        }
+      ]
+    },
+    {
+      id: 'y1_grade_comparison_stress',
+      title: '성적 비교 스트레스',
+      year: 1,
+      desc: '친구들과 성적을 비교하다 보니 위축되고 스트레스를 받는다.',
+      choices: [
+        {
+          text: '남과의 비교보다 나만의 성장 기록에 집중하기로 한다. [⚡ 자기주도 20 이상]',
+          reqStat: { stat: 'selfDirected', min: 20 },
+          resultText: '스스로의 성장에 집중하니 마음이 편해졌습니다! 자기주도 +15, 멘탈 +20 회복!',
+          statReward: { selfDirected: 15 },
+          mentalHeal: 20,
+          creditBonus: 3
+        },
+        {
+          text: '친구에게 고민을 털어놓고 위로받는다. (조건 없음)',
+          resultText: '대화를 나누니 마음이 한결 가벼워졌습니다. 공동체 +10, 2학점.',
+          statReward: { community: 10 },
+          creditBonus: 2
+        }
+      ]
+    },
+    {
+      id: 'y1_class_election',
+      title: '학급 임원 선거 도전',
+      year: 1,
+      desc: '학급 회장 선거에 나가볼까 고민이 된다. 부담도 되지만 도전해보고 싶다.',
+      choices: [
+        {
+          text: '공약을 준비해 당당히 후보로 출마한다! [🎯 진로 20 이상]',
+          reqStat: { stat: 'career', min: 20 },
+          resultText: '진솔한 공약으로 학급 회장에 당선되었습니다! 진로 +15, 공동체 +10!',
+          statReward: { career: 15, community: 10 },
+          creditBonus: 3
+        },
+        {
+          text: '후보를 도와 선거운동을 지원한다. (조건 없음)',
+          resultText: '조력자로서 뜻깊은 경험을 했습니다. 공동체 +10, 2학점.',
+          statReward: { community: 10 },
+          creditBonus: 2
+        }
+      ]
+    },
+    {
+      id: 'y1_record_worry',
+      title: '생활기록부 세특 작성 고민',
+      year: 1,
+      desc: '첫 학기 생활기록부 세부능력 특기사항에 무엇을 채워야 할지 고민이 된다.',
+      choices: [
+        {
+          text: '한 학기 동안의 탐구 활동을 스스로 정리해 선생님께 전달한다. [📚 학업 20 이상]',
+          reqStat: { stat: 'academic', min: 20 },
+          resultText: '구체적인 자료 덕분에 알찬 세특이 완성됐습니다! 학업 +15, 진로 +10!',
+          statReward: { academic: 15, career: 10 },
+          creditBonus: 3
+        },
+        {
+          text: '선생님과 상담하며 방향을 함께 정한다. (조건 없음)',
+          resultText: '상담을 통해 앞으로의 방향을 잡았습니다. 자기주도 +10, 2학점.',
+          statReward: { selfDirected: 10 },
+          creditBonus: 2
+        }
+      ]
+    },
+
+    // ===== 2학년 트랙별 이벤트 (트랙마다 다른 이벤트 + 다회차 변주) =====
+    {
+      id: 'y2s0_tech',
+      title: '코딩 동아리 해커톤 출전 제안',
+      year: 2,
+      desc: '교내 코딩 동아리에서 전국 해커톤 대회 출전 팀을 꾸린다는 소식이 들려온다. 밤새 코딩할 각오가 필요하다.',
+      choices: [
+        { text: '팀장을 맡아 프로젝트를 이끈다! [🎯 진로 25 이상]', reqStat: { stat: 'career', min: 25 }, resultText: '리더십을 발휘해 팀을 우승으로 이끌었습니다! 진로 +15, 학업 +10, 4학점!', statReward: { career: 15, academic: 10 }, creditBonus: 4 },
+        { text: '팀원으로 참여해 힘을 보탠다. (조건 없음)', resultText: '협업의 즐거움을 느끼며 실력을 키웠습니다. 학업 +10, 2학점.', statReward: { academic: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s0_bio',
+      title: '생명과학 실험실 심화반 지원',
+      year: 2,
+      desc: '방과후 생명과학 심화 실험반 모집이 시작됐다. 정원이 적어 지원서에 진지한 연구 계획이 필요하다.',
+      choices: [
+        { text: '구체적인 탐구 계획서를 작성해 지원한다! [📚 학업 25 이상]', reqStat: { stat: 'academic', min: 25 }, resultText: '탄탄한 계획서로 합격! 심화 실험을 통해 학업 +15, 자기주도 +10!', statReward: { academic: 15, selfDirected: 10 }, creditBonus: 4 },
+        { text: '선배에게 조언을 구해 지원서를 다듬는다. (조건 없음)', resultText: '선배의 팁으로 무난히 합격했습니다. 공동체 +10, 2학점.', statReward: { community: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s0_social',
+      title: '모의 유엔(MUN) 학교 대표 선발전',
+      year: 2,
+      desc: '모의 유엔 대회에 학교를 대표해 나갈 대표단을 선발한다. 국제 이슈에 대한 발표와 토론이 기다린다.',
+      choices: [
+        { text: '국제 분쟁 이슈를 깊이 조사해 발표를 준비한다! [🎯 진로 25 이상]', reqStat: { stat: 'career', min: 25 }, resultText: '설득력 있는 발표로 대표단에 선발! 진로 +15, 공동체 +10!', statReward: { career: 15, community: 10 }, creditBonus: 4 },
+        { text: '팀원들과 역할을 나눠 자료를 조사한다. (조건 없음)', resultText: '협업을 통해 무난히 준비를 마쳤습니다. 공동체 +10, 2학점.', statReward: { community: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s0_art',
+      title: '교내 미술제 큐레이터 참여 제안',
+      year: 2,
+      desc: '교내 미술제 전시를 기획할 학생 큐레이터를 모집한다. 작품 선정과 전시 구성 감각이 필요하다.',
+      choices: [
+        { text: '독창적인 전시 컨셉을 기획해 지원한다! [🎯 진로 25 이상]', reqStat: { stat: 'career', min: 25 }, resultText: '참신한 기획이 채택되어 큐레이터로 선발! 진로 +15, 창체 4학점!', statReward: { career: 15 }, creditBonus: 4 },
+        { text: '작품 운반과 전시 설치를 돕는 스태프로 참여한다. (조건 없음)', resultText: '전시 준비 과정을 배우며 즐겁게 참여했습니다. 공동체 +10, 2학점.', statReward: { community: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s1_tech',
+      title: '알고리즘 문제풀이 슬럼프',
+      year: 2,
+      desc: '정보 과목 알고리즘 문제를 며칠째 풀지 못해 자신감이 떨어졌다.',
+      choices: [
+        { text: '기초 개념부터 차근차근 다시 정리한다. [⚡ 자기주도 25 이상]', reqStat: { stat: 'selfDirected', min: 25 }, resultText: '기초를 다지자 막혔던 문제가 풀렸습니다! 자기주도 +15, 학업 +10!', statReward: { selfDirected: 15, academic: 10 }, creditBonus: 4 },
+        { text: '일단 며칠 쉬면서 머리를 식힌다. (조건 없음)', resultText: '재충전 후 다시 도전하니 한결 나아졌습니다. 멘탈 +20 회복.', mentalHeal: 20, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s1_bio',
+      title: '실험보고서 데이터 조작 유혹',
+      year: 2,
+      desc: '실험 결과가 예상과 다르게 나와서, 그럴듯하게 데이터를 손보고 싶은 유혹이 든다.',
+      choices: [
+        { text: '있는 그대로의 데이터로 원인을 재분석해 보고서를 쓴다. [📚 학업 25 이상]', reqStat: { stat: 'academic', min: 25 }, resultText: '정직한 분석으로 오히려 새로운 발견을 했습니다! 학업 +15, 자기주도 +10!', statReward: { academic: 15, selfDirected: 10 }, creditBonus: 4 },
+        { text: '선생님께 실험 오차의 원인을 상담한다. (조건 없음)', resultText: '실험 오차를 이해하며 한층 성장했습니다. 학업 +10, 2학점.', statReward: { academic: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s1_social',
+      title: '토론대회 팀원과의 의견 충돌',
+      year: 2,
+      desc: '토론대회를 준비하는데 팀원과 논지 방향이 크게 갈려 갈등이 생겼다.',
+      choices: [
+        { text: '서로의 논리를 경청하고 절충안을 제시한다. [🤝 공동체 25 이상]', reqStat: { stat: 'community', min: 25 }, resultText: '훌륭한 중재로 팀의 논리가 더 탄탄해졌습니다! 공동체 +15, 진로 +10!', statReward: { community: 15, career: 10 }, creditBonus: 4 },
+        { text: '일단 각자 조사한 자료를 모두 취합해본다. (조건 없음)', resultText: '다양한 관점을 모아 무난히 정리했습니다. 학업 +10, 2학점.', statReward: { academic: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s1_art',
+      title: '창작 아이디어 고갈(작가의 벽)',
+      year: 2,
+      desc: '다음 작품을 구상해야 하는데 며칠째 어떤 아이디어도 떠오르지 않는다.',
+      choices: [
+        { text: '다양한 예술 작품과 전시를 찾아보며 영감을 얻는다. [⚡ 자기주도 25 이상]', reqStat: { stat: 'selfDirected', min: 25 }, resultText: '새로운 영감으로 독창적인 아이디어를 떠올렸습니다! 자기주도 +15, 진로 +10!', statReward: { selfDirected: 15, career: 10 }, creditBonus: 4 },
+        { text: '일단 손이 가는 대로 스케치를 시작해본다. (조건 없음)', resultText: '끄적이다 보니 조금씩 방향이 잡혔습니다. 멘탈 +20 회복.', mentalHeal: 20, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s2_tech',
+      title: '정보 과목 코딩 테스트 압박',
+      year: 2,
+      desc: '정보 과목 실기 코딩 테스트 일정이 코앞으로 다가왔다.',
+      choices: [
+        { text: '매일 문제를 정해진 시간 안에 푸는 실전 연습을 한다. [📚 학업 25 이상]', reqStat: { stat: 'academic', min: 25 }, resultText: '실전 감각을 익혀 테스트를 완벽히 통과했습니다! 학업 +15, 자기주도 +10!', statReward: { academic: 15, selfDirected: 10 }, creditBonus: 4 },
+        { text: '친구와 서로 코드 리뷰를 해준다. (조건 없음)', resultText: '서로의 코드를 보며 실력이 함께 늘었습니다. 공동체 +10, 2학점.', statReward: { community: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s2_bio',
+      title: '화학 실험 정량분석 오차',
+      year: 2,
+      desc: '적정 실험에서 계속 오차가 발생해 결과가 들쭉날쭉하다.',
+      choices: [
+        { text: '실험 절차를 처음부터 꼼꼼히 재점검한다. [📚 학업 25 이상]', reqStat: { stat: 'academic', min: 25 }, resultText: '미세한 절차 오류를 찾아내 정확한 결과를 얻었습니다! 학업 +15, 자기주도 +10!', statReward: { academic: 15, selfDirected: 10 }, creditBonus: 4 },
+        { text: '조교 선생님께 실험 팁을 여쭤본다. (조건 없음)', resultText: '유용한 팁으로 오차를 줄였습니다. 학업 +10, 2학점.', statReward: { academic: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s2_social',
+      title: '세계사 연표 암기의 늪',
+      year: 2,
+      desc: '세계사 시험이 다가오는데 방대한 연표와 사건들이 뒤섞여 헷갈린다.',
+      choices: [
+        { text: '사건들을 흐름과 인과관계로 묶어 나만의 타임라인을 만든다. [📚 학업 25 이상]', reqStat: { stat: 'academic', min: 25 }, resultText: '맥락으로 이해하니 훨씬 오래 기억에 남았습니다! 학업 +15, 자기주도 +10!', statReward: { academic: 15, selfDirected: 10 }, creditBonus: 4 },
+        { text: '친구들과 퀴즈를 내며 암기한다. (조건 없음)', resultText: '즐겁게 서로 문제를 내며 외웠습니다. 공동체 +10, 2학점.', statReward: { community: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s2_art',
+      title: '음악·미술 실기고사 부담',
+      year: 2,
+      desc: '예술 실기고사가 코앞인데 완성도가 마음에 들지 않아 초조하다.',
+      choices: [
+        { text: '기초 테크닉부터 반복 연습하며 완성도를 높인다. [⚡ 자기주도 25 이상]', reqStat: { stat: 'selfDirected', min: 25 }, resultText: '꾸준한 연습으로 실기 완성도가 크게 올랐습니다! 자기주도 +15, 학업 +10!', statReward: { selfDirected: 15, academic: 10 }, creditBonus: 4 },
+        { text: '선생님께 피드백을 받아 보완한다. (조건 없음)', resultText: '구체적인 피드백으로 부족한 점을 채웠습니다. 학업 +10, 2학점.', statReward: { academic: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s3_tech',
+      title: 'AI 융합 수업 정원 미달 위기',
+      year: 2,
+      desc: '신설된 AI 융합 수업이 신청자 부족으로 폐강될 위기에 놓였다.',
+      choices: [
+        { text: '수업의 가치를 알리는 캠페인을 벌여 친구들을 모집한다! [🤝 공동체 25 이상]', reqStat: { stat: 'community', min: 25 }, resultText: '적극적인 홍보로 정원을 채워 수업을 지켜냈습니다! 공동체 +15, 진로 +10!', statReward: { community: 15, career: 10 }, creditBonus: 4 },
+        { text: '선생님께 수업의 필요성을 직접 건의한다. (조건 없음)', resultText: '건의가 반영되어 소규모로라도 개설되었습니다. 진로 +10, 2학점.', statReward: { career: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s3_bio',
+      title: '생명과학Ⅱ 폐강 위기',
+      year: 2,
+      desc: '심화 생명과학 수업이 신청 인원 부족으로 폐강 논의에 들어갔다.',
+      choices: [
+        { text: '수업의 필요성을 정리해 학교 측에 건의서를 제출한다! [🎯 진로 25 이상]', reqStat: { stat: 'career', min: 25 }, resultText: '논리적인 건의로 수업이 유지되었습니다! 진로 +15, 공동체 +10!', statReward: { career: 15, community: 10 }, creditBonus: 4 },
+        { text: '다른 학교와 공동교육과정으로 수강하는 방법을 알아본다. (조건 없음)', resultText: '공동교육과정으로 수업을 계속 들을 수 있었습니다. 자기주도 +10, 2학점.', statReward: { selfDirected: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s3_social',
+      title: '국제정치 소인수 수업 존속 청원',
+      year: 2,
+      desc: '신청자가 적은 국제정치 심화 수업이 폐강 위기에 놓여 학생들이 청원을 준비한다.',
+      choices: [
+        { text: '청원서를 작성하고 서명을 모아 학교에 제출한다! [🤝 공동체 25 이상]', reqStat: { stat: 'community', min: 25 }, resultText: '많은 서명을 모아 수업을 지켜냈습니다! 공동체 +15, 진로 +10!', statReward: { community: 15, career: 10 }, creditBonus: 4 },
+        { text: '선생님과 면담해 대안을 논의한다. (조건 없음)', resultText: '온라인 공동수업으로 대체할 방법을 찾았습니다. 학업 +10, 2학점.', statReward: { academic: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s3_art',
+      title: '예술 융합 수업 축소 논란',
+      year: 2,
+      desc: '예산 문제로 예술 융합 수업의 시수가 줄어들 수 있다는 소식이 들린다.',
+      choices: [
+        { text: '학생 작품 전시회를 열어 수업의 가치를 보여준다! [🎯 진로 25 이상]', reqStat: { stat: 'career', min: 25 }, resultText: '전시회가 큰 호응을 얻어 수업 시수가 유지되었습니다! 진로 +15, 공동체 +10!', statReward: { career: 15, community: 10 }, creditBonus: 4 },
+        { text: '선생님과 함께 수업 개선안을 논의한다. (조건 없음)', resultText: '개선안이 반영되어 수업이 계속되었습니다. 자기주도 +10, 2학점.', statReward: { selfDirected: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s4_tech',
+      title: '축제 앱 개발 부스 운영',
+      year: 2,
+      desc: '학교 축제에서 직접 만든 축제 안내 앱을 시연하는 부스를 운영하게 됐다.',
+      choices: [
+        { text: '실시간 부스 혼잡도 알림 기능까지 추가로 개발한다! [📚 학업 25 이상]', reqStat: { stat: 'academic', min: 25 }, resultText: '혁신적인 기능으로 큰 인기를 얻었습니다! 학업 +15, 진로 +10!', statReward: { academic: 15, career: 10 }, creditBonus: 4 },
+        { text: '기본 기능으로 안정적으로 부스를 운영한다. (조건 없음)', resultText: '무난하게 부스를 운영해 좋은 반응을 얻었습니다. 공동체 +10, 2학점.', statReward: { community: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s4_bio',
+      title: '과학 체험부스 안전 관리',
+      year: 2,
+      desc: '축제에서 화학·생명과학 체험 부스를 운영하는데, 안전 관리가 무엇보다 중요하다.',
+      choices: [
+        { text: '철저한 안전 수칙과 보호장비를 준비해 부스를 운영한다! [📚 학업 25 이상]', reqStat: { stat: 'academic', min: 25 }, resultText: '안전하고 알기 쉬운 체험으로 큰 호응을 얻었습니다! 학업 +15, 공동체 +10!', statReward: { academic: 15, community: 10 }, creditBonus: 4 },
+        { text: '선생님과 함께 기본 안전 수칙만 확인하고 운영한다. (조건 없음)', resultText: '무사히 부스를 마쳤습니다. 자기주도 +10, 2학점.', statReward: { selfDirected: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s4_social',
+      title: '모의 유엔 캠페인 부스',
+      year: 2,
+      desc: '축제에서 국제 이슈를 알리는 캠페인 부스를 운영하게 되었다.',
+      choices: [
+        { text: '실제 통계와 자료를 활용한 전시로 캠페인을 기획한다! [🎯 진로 25 이상]', reqStat: { stat: 'career', min: 25 }, resultText: '설득력 있는 캠페인으로 많은 학생의 관심을 끌었습니다! 진로 +15, 공동체 +10!', statReward: { career: 15, community: 10 }, creditBonus: 4 },
+        { text: '친구들과 역할을 나눠 부스를 운영한다. (조건 없음)', resultText: '협업으로 무난하게 캠페인을 마쳤습니다. 공동체 +10, 2학점.', statReward: { community: 10 }, creditBonus: 2 }
+      ]
+    },
+    {
+      id: 'y2s4_art',
+      title: '축제 전시·공연 총괄 기획',
+      year: 2,
+      desc: '축제의 예술 전시와 공연 전체를 기획하는 총괄을 맡게 되었다.',
+      choices: [
+        { text: '전시와 공연을 잇는 통합 테마를 기획한다! [🎯 진로 25 이상]', reqStat: { stat: 'career', min: 25 }, resultText: '인상적인 통합 기획으로 축제의 하이라이트가 되었습니다! 진로 +15, 공동체 +10!', statReward: { career: 15, community: 10 }, creditBonus: 4 },
+        { text: '각 팀의 의견을 모아 무리 없이 진행한다. (조건 없음)', resultText: '모두의 의견을 반영해 순조롭게 마쳤습니다. 공동체 +10, 2학점.', statReward: { community: 10 }, creditBonus: 2 }
+      ]
+    },
+
+    // ===== 3학년 트랙별 이벤트 (트랙마다 다른 이벤트 + 다회차 변주) =====
+    {
+      id: 'y3s0_tech',
+      title: '대학 연계 AI 캠프 참가',
+      year: 3,
+      desc: '대학교와 연계된 AI 심화 캠프 참가 기회가 주어졌다. 밀도 높은 프로젝트 실습이 예정되어 있다.',
+      choices: [
+        { text: '팀 프로젝트 리더를 자원해 심화 과제를 이끈다! [🎯 진로 35 이상]', reqStat: { stat: 'career', min: 35 }, resultText: '뛰어난 성과로 캠프 우수상을 받았습니다! 진로 +20, 학업 +15, 4학점!', statReward: { career: 20, academic: 15 }, creditBonus: 4 },
+        { text: '팀원으로서 맡은 역할에 최선을 다한다. (조건 없음)', resultText: '값진 실전 경험을 쌓았습니다. 학업 +10, 3학점.', statReward: { academic: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s0_bio',
+      title: '대학 연구실 탐방 프로그램',
+      year: 3,
+      desc: '의약·생명과학 계열 대학 연구실을 직접 탐방하는 프로그램에 선발되었다.',
+      choices: [
+        { text: '연구자에게 날카로운 질문을 던지며 적극적으로 배운다! [📚 학업 35 이상]', reqStat: { stat: 'academic', min: 35 }, resultText: '연구자의 깊은 통찰을 얻어 진로가 더 명확해졌습니다! 학업 +20, 진로 +15, 4학점!', statReward: { academic: 20, career: 15 }, creditBonus: 4 },
+        { text: '조용히 견학하며 필기로 기록한다. (조건 없음)', resultText: '차분히 관찰하며 많은 것을 배웠습니다. 자기주도 +10, 3학점.', statReward: { selfDirected: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s0_social',
+      title: '국제기구 화상 인턴십 체험',
+      year: 3,
+      desc: '국제기구와 연계된 화상 인턴십 체험 프로그램에 참여할 기회가 생겼다.',
+      choices: [
+        { text: '국제 이슈 보고서를 작성해 적극적으로 참여한다! [🎯 진로 35 이상]', reqStat: { stat: 'career', min: 35 }, resultText: '우수한 보고서로 담당자에게 좋은 평가를 받았습니다! 진로 +20, 학업 +15, 4학점!', statReward: { career: 20, academic: 15 }, creditBonus: 4 },
+        { text: '차분히 회의를 참관하며 배운다. (조건 없음)', resultText: '국제기구의 실제 업무를 이해하게 되었습니다. 공동체 +10, 3학점.', statReward: { community: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s0_art',
+      title: '예술대학 연계 포트폴리오 특강',
+      year: 3,
+      desc: '예술대학과 연계된 포트폴리오 특강에 참여할 기회가 생겼다.',
+      choices: [
+        { text: '그동안의 작품을 정리해 전문가의 첨삭을 받는다! [🎯 진로 35 이상]', reqStat: { stat: 'career', min: 35 }, resultText: '전문적인 피드백으로 포트폴리오가 한층 완성되었습니다! 진로 +20, 학업 +15, 4학점!', statReward: { career: 20, academic: 15 }, creditBonus: 4 },
+        { text: '다른 학생들의 작품을 보며 안목을 넓힌다. (조건 없음)', resultText: '다양한 스타일을 접하며 시야가 넓어졌습니다. 자기주도 +10, 3학점.', statReward: { selfDirected: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s1_tech',
+      title: '개발자 모의 면접 리허설',
+      year: 3,
+      desc: '진로 특강에서 현직 개발자와의 모의 면접 기회가 주어졌다.',
+      choices: [
+        { text: '포트폴리오 프로젝트를 논리적으로 설명한다. [📚 학업 35 이상]', reqStat: { stat: 'academic', min: 35 }, resultText: '명확한 설명으로 좋은 피드백을 받았습니다! 학업 +20, 진로 +15!', statReward: { academic: 20, career: 15 }, creditBonus: 4 },
+        { text: '긴장했지만 솔직하게 배운 점을 이야기한다. (조건 없음)', resultText: '솔직한 태도가 좋은 인상을 남겼습니다. 멘탈 +20 회복.', mentalHeal: 20, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s1_bio',
+      title: '의약계열 모의 면접',
+      year: 3,
+      desc: '진로 특강에서 의약·생명과학 계열 전문가와의 모의 면접 기회가 주어졌다.',
+      choices: [
+        { text: '생명윤리에 대한 자신의 관점을 논리적으로 답변한다. [📚 학업 35 이상]', reqStat: { stat: 'academic', min: 35 }, resultText: '깊이 있는 답변으로 전문가에게 인상을 남겼습니다! 학업 +20, 진로 +15!', statReward: { academic: 20, career: 15 }, creditBonus: 4 },
+        { text: '솔직하게 자신의 경험과 배운 점을 이야기한다. (조건 없음)', resultText: '진솔한 태도가 좋은 평가를 받았습니다. 멘탈 +20 회복.', mentalHeal: 20, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s1_social',
+      title: '외교관 모의 면접',
+      year: 3,
+      desc: '진로 특강에서 외교관·국제기구 전문가와의 모의 면접 기회가 주어졌다.',
+      choices: [
+        { text: '국제 이슈에 대한 균형 잡힌 시각을 논리적으로 제시한다. [📚 학업 35 이상]', reqStat: { stat: 'academic', min: 35 }, resultText: '균형 잡힌 시각이 인상적이라는 평가를 받았습니다! 학업 +20, 진로 +15!', statReward: { academic: 20, career: 15 }, creditBonus: 4 },
+        { text: '솔직하게 관심을 갖게 된 계기를 이야기한다. (조건 없음)', resultText: '진솔한 이야기가 좋은 인상을 남겼습니다. 멘탈 +20 회복.', mentalHeal: 20, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s1_art',
+      title: '크리에이터 모의 면접',
+      year: 3,
+      desc: '진로 특강에서 현직 콘텐츠 크리에이터와의 모의 면접 기회가 주어졌다.',
+      choices: [
+        { text: '자신의 창작 철학과 대표작을 논리적으로 설명한다. [📚 학업 35 이상]', reqStat: { stat: 'academic', min: 35 }, resultText: '뚜렷한 창작 철학이 좋은 평가를 받았습니다! 학업 +20, 진로 +15!', statReward: { academic: 20, career: 15 }, creditBonus: 4 },
+        { text: '솔직하게 작업 과정의 고민을 이야기한다. (조건 없음)', resultText: '진솔한 태도가 좋은 인상을 남겼습니다. 멘탈 +20 회복.', mentalHeal: 20, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s2_tech',
+      title: '인공지능 윤리 탐구보고서',
+      year: 3,
+      desc: '인공지능의 편향성과 윤리 문제를 주제로 심화 탐구보고서를 작성해야 한다.',
+      choices: [
+        { text: '실제 AI 편향 사례를 조사해 데이터로 분석한다. [📚 학업 35 이상]', reqStat: { stat: 'academic', min: 35 }, resultText: '탄탄한 데이터 분석으로 우수 보고서로 선정되었습니다! 학업 +20, 진로 +15!', statReward: { academic: 20, career: 15 }, creditBonus: 4 },
+        { text: '관련 기사와 책을 참고해 보고서를 작성한다. (조건 없음)', resultText: '성실하게 조사해 무난한 보고서를 완성했습니다. 자기주도 +10, 3학점.', statReward: { selfDirected: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s2_bio',
+      title: '유전자 편집 기술 탐구보고서',
+      year: 3,
+      desc: '크리스퍼 유전자 가위 기술의 가능성과 한계를 주제로 탐구보고서를 작성해야 한다.',
+      choices: [
+        { text: '최신 논문을 찾아 근거를 바탕으로 심층 분석한다. [📚 학업 35 이상]', reqStat: { stat: 'academic', min: 35 }, resultText: '심층적인 분석으로 우수 보고서로 선정되었습니다! 학업 +20, 진로 +15!', statReward: { academic: 20, career: 15 }, creditBonus: 4 },
+        { text: '교과서와 참고자료 중심으로 보고서를 작성한다. (조건 없음)', resultText: '기본에 충실한 보고서를 완성했습니다. 자기주도 +10, 3학점.', statReward: { selfDirected: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s2_social',
+      title: '국제 분쟁 사례 탐구보고서',
+      year: 3,
+      desc: '현대 국제 분쟁의 원인과 해결 방안을 주제로 탐구보고서를 작성해야 한다.',
+      choices: [
+        { text: '다양한 국가의 입장을 균형 있게 비교 분석한다. [📚 학업 35 이상]', reqStat: { stat: 'academic', min: 35 }, resultText: '균형 잡힌 분석으로 우수 보고서로 선정되었습니다! 학업 +20, 진로 +15!', statReward: { academic: 20, career: 15 }, creditBonus: 4 },
+        { text: '뉴스 기사를 중심으로 보고서를 작성한다. (조건 없음)', resultText: '시사에 밝은 보고서를 완성했습니다. 자기주도 +10, 3학점.', statReward: { selfDirected: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s2_art',
+      title: '미디어 콘텐츠와 저작권 탐구보고서',
+      year: 3,
+      desc: '디지털 콘텐츠 시대의 저작권 문제를 주제로 탐구보고서를 작성해야 한다.',
+      choices: [
+        { text: '실제 저작권 분쟁 사례를 조사해 심층 분석한다. [📚 학업 35 이상]', reqStat: { stat: 'academic', min: 35 }, resultText: '생생한 사례 분석으로 우수 보고서로 선정되었습니다! 학업 +20, 진로 +15!', statReward: { academic: 20, career: 15 }, creditBonus: 4 },
+        { text: '관련 법령을 정리해 기본적인 보고서를 작성한다. (조건 없음)', resultText: '착실하게 정리한 보고서를 완성했습니다. 자기주도 +10, 3학점.', statReward: { selfDirected: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s3_tech',
+      title: '정보 과목 수행평가 폭탄',
+      year: 3,
+      desc: '정보 과목의 대형 프로젝트 마감이 다가오는데 아직 절반도 완성하지 못했다.',
+      choices: [
+        { text: '우선순위를 정해 핵심 기능부터 완성한다. [⚡ 자기주도 35 이상]', reqStat: { stat: 'selfDirected', min: 35 }, resultText: '효율적인 시간 관리로 프로젝트를 완성했습니다! 자기주도 +20, 학업 +15!', statReward: { selfDirected: 20, academic: 15 }, creditBonus: 4 },
+        { text: '밤을 새워서라도 끝까지 완성한다. (조건 없음)', resultText: '힘들었지만 끝까지 해냈습니다. 멘탈 -15 소모, 학업 +10!', statReward: { academic: 10 }, mentalHeal: -15, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s3_bio',
+      title: '생명과학 논술형 평가 압박',
+      year: 3,
+      desc: '생명과학 논술형 수행평가 준비 시간이 부족해 압박감이 크다.',
+      choices: [
+        { text: '핵심 개념 위주로 답안 구조를 미리 짜서 연습한다. [⚡ 자기주도 35 이상]', reqStat: { stat: 'selfDirected', min: 35 }, resultText: '체계적인 연습으로 논술 실력이 크게 향상되었습니다! 자기주도 +20, 학업 +15!', statReward: { selfDirected: 20, academic: 15 }, creditBonus: 4 },
+        { text: '친구들과 스터디를 꾸려 서로 첨삭해준다. (조건 없음)', resultText: '서로의 답안을 보며 부족한 점을 채웠습니다. 공동체 +10, 3학점.', statReward: { community: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s3_social',
+      title: '사회탐구 발표 준비 압박',
+      year: 3,
+      desc: '사회문제 탐구 발표가 코앞인데 자료가 아직 정리되지 않았다.',
+      choices: [
+        { text: '발표 시나리오와 슬라이드를 체계적으로 미리 준비한다. [⚡ 자기주도 35 이상]', reqStat: { stat: 'selfDirected', min: 35 }, resultText: '철저한 준비로 발표가 성공적으로 끝났습니다! 자기주도 +20, 진로 +15!', statReward: { selfDirected: 20, career: 15 }, creditBonus: 4 },
+        { text: '팀원들과 역할을 나눠 급히 마무리한다. (조건 없음)', resultText: '협업으로 겨우 시간 내에 마쳤습니다. 공동체 +10, 3학점.', statReward: { community: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s3_art',
+      title: '졸업 작품 완성 압박',
+      year: 3,
+      desc: '졸업 작품 전시 마감이 다가오는데 작품이 아직 미완성 상태다.',
+      choices: [
+        { text: '작업 계획을 다시 세워 남은 시간을 효율적으로 쓴다. [⚡ 자기주도 35 이상]', reqStat: { stat: 'selfDirected', min: 35 }, resultText: '계획적인 작업으로 작품을 완성했습니다! 자기주도 +20, 진로 +15!', statReward: { selfDirected: 20, career: 15 }, creditBonus: 4 },
+        { text: '밤을 새워서라도 끝까지 완성한다. (조건 없음)', resultText: '힘들었지만 작품을 완성해냈습니다. 멘탈 -15 소모, 진로 +10!', statReward: { career: 10 }, mentalHeal: -15, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s4_tech',
+      title: '개발 프로젝트 포트폴리오 박람회',
+      year: 3,
+      desc: '3년간 만든 개발 프로젝트들을 포트폴리오 박람회에서 발표하게 되었다.',
+      choices: [
+        { text: '프로젝트의 문제해결 과정을 스토리로 엮어 발표한다! [🎯 진로 35 이상]', reqStat: { stat: 'career', min: 35 }, resultText: '인상적인 스토리텔링으로 관람객들의 큰 관심을 받았습니다! 진로 +20, 학업 +15!', statReward: { career: 20, academic: 15 }, creditBonus: 4 },
+        { text: '기술적 완성도를 중심으로 차분히 설명한다. (조건 없음)', resultText: '꼼꼼한 설명으로 좋은 평가를 받았습니다. 학업 +10, 3학점.', statReward: { academic: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s4_bio',
+      title: '생명과학 탐구 포트폴리오 박람회',
+      year: 3,
+      desc: '3년간의 생명과학 탐구 활동을 포트폴리오 박람회에서 발표하게 되었다.',
+      choices: [
+        { text: '탐구 과정에서의 실패와 극복 과정을 진솔하게 발표한다! [🎯 진로 35 이상]', reqStat: { stat: 'career', min: 35 }, resultText: '진솔한 발표가 큰 감동과 호응을 얻었습니다! 진로 +20, 학업 +15!', statReward: { career: 20, academic: 15 }, creditBonus: 4 },
+        { text: '실험 데이터와 결과를 중심으로 차분히 설명한다. (조건 없음)', resultText: '꼼꼼한 설명으로 좋은 평가를 받았습니다. 학업 +10, 3학점.', statReward: { academic: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s4_social',
+      title: '사회참여 활동 포트폴리오 박람회',
+      year: 3,
+      desc: '3년간의 사회참여·국제교류 활동을 포트폴리오 박람회에서 발표하게 되었다.',
+      choices: [
+        { text: '활동을 통해 성장한 자신의 가치관 변화를 진솔하게 발표한다! [🎯 진로 35 이상]', reqStat: { stat: 'career', min: 35 }, resultText: '진솔한 발표가 큰 공감을 얻었습니다! 진로 +20, 공동체 +15!', statReward: { career: 20, community: 15 }, creditBonus: 4 },
+        { text: '활동 기록과 성과를 중심으로 차분히 설명한다. (조건 없음)', resultText: '꼼꼼한 설명으로 좋은 평가를 받았습니다. 공동체 +10, 3학점.', statReward: { community: 10 }, creditBonus: 3 }
+      ]
+    },
+    {
+      id: 'y3s4_art',
+      title: '창작 작품 포트폴리오 박람회',
+      year: 3,
+      desc: '3년간 만든 창작 작품들을 포트폴리오 박람회에서 전시·발표하게 되었다.',
+      choices: [
+        { text: '작품에 담긴 개인적 서사와 메시지를 진솔하게 발표한다! [🎯 진로 35 이상]', reqStat: { stat: 'career', min: 35 }, resultText: '진솔한 서사가 관람객들에게 깊은 인상을 남겼습니다! 진로 +20, 학업 +15!', statReward: { career: 20, academic: 15 }, creditBonus: 4 },
+        { text: '작품의 제작 과정과 기법을 중심으로 설명한다. (조건 없음)', resultText: '전문적인 설명으로 좋은 평가를 받았습니다. 학업 +10, 3학점.', statReward: { academic: 10 }, creditBonus: 3 }
+      ]
     }
   ],
 
@@ -1247,6 +2483,18 @@ const GAME_DATA = {
           options: ['192학점 (교과 174 + 창체 18)', '204학점', '150학점', '300학점'],
           ans: 0,
           exp: '2022 개정 교육과정 고교학점제 기준 총 192학점(교과 174 + 창체 18)이 졸업 기준입니다.'
+        },
+        {
+          q: '고교학점제에서 1학점을 이수했다고 인정받기 위한 수업량의 기준은?',
+          options: ['50분 기준 16회(총 17회) 수업', '1시간 자유 학습', '시험 1회 응시', '출석 1일'],
+          ans: 0,
+          exp: '1학점은 50분 수업을 16회(총 17회) 이수하는 것을 원칙으로 합니다.'
+        },
+        {
+          q: '고교학점제에서 최소 학업성취수준에 도달하지 못한 과목에 부여되는 미이수 등급은?',
+          options: ['I등급(Incomplete)', 'A등급', 'P등급(Pass)', 'S등급'],
+          ans: 0,
+          exp: 'I등급은 성취기준에 도달하지 못해 학점을 인정받지 못하는 상태입니다.'
         }
       ]
     },
@@ -1267,6 +2515,18 @@ const GAME_DATA = {
           options: ['공통수학1 → 대수 → 미적분Ⅱ', '미적분Ⅱ → 공통수학1 → 대수', '기하 → 공통수학1', '미적분Ⅰ → 공통수학1'],
           ans: 0,
           exp: '기초가 되는 공통수학과 대수를 먼저 이수해야 심화인 미적분Ⅱ를 올바르게 수강할 수 있습니다.'
+        },
+        {
+          q: '고교학점제에서 학생이 스스로 진로에 맞는 과목을 선택하고 이수 계획을 세우는 것을 무엇이라 하는가?',
+          options: ['개인별 학업설계', '담임의 강제 배정', '전과목 필수 지정', '무작위 추첨 배정'],
+          ans: 0,
+          exp: '개인별 학업설계는 학생이 진로에 맞춰 과목을 주도적으로 설계하는 것입니다.'
+        },
+        {
+          q: '최소성취수준에 도달하지 못한 학생에게 제공되는 보충 지도 제도는?',
+          options: ['최소성취수준 보장지도', '전과목 재수강 의무', '자동 유급 처리', '즉시 졸업 취소'],
+          ans: 0,
+          exp: '보장지도는 기초 학력 미달 학생을 지원하기 위한 제도입니다.'
         }
       ]
     },
@@ -1287,6 +2547,18 @@ const GAME_DATA = {
           options: ['나만의 고유한 꿈과 역량을 증명하는 맞춤형 포트폴리오', '남들과 똑같은 판박이 생활기록부', '단순 암기 시험 점수표', '아무런 의미가 없다'],
           ans: 0,
           exp: '학생이 주도적으로 선택하고 성취한 과목들의 궤적은 미래 대학과 사회에서 가장 높이 평가받는 나만의 무기입니다.'
+        },
+        {
+          q: '고교학점제 졸업 요건 중 교과 174학점 외에 창의적 체험활동으로 채워야 하는 학점은?',
+          options: ['18학점', '30학점', '0학점', '50학점'],
+          ans: 0,
+          exp: '창의적 체험활동 18학점과 교과 174학점을 합쳐 총 192학점이 졸업 기준입니다.'
+        },
+        {
+          q: '대학입시에서 고교학점제 이수 기록이 특히 중요하게 평가받는 이유는?',
+          options: ['진로와 연계된 자기주도적 선택과 성장 과정을 보여주기 때문', '모든 학생이 똑같은 과목을 들었기 때문', '시험 점수만 반영되기 때문', '창체 활동은 평가에서 무시되기 때문'],
+          ans: 0,
+          exp: '자기주도적으로 설계한 이수 기록은 학생 고유의 성장 서사를 보여줍니다.'
         }
       ]
     }

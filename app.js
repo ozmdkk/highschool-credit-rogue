@@ -582,12 +582,37 @@ class CreditRogueGame {
     const currentSchedule = GAME_DATA.waveSchedule[waveNum - 1];
 
     if (currentSchedule.type === 'event') {
-      this.startEventWave(currentSchedule.eventId);
+      const eventId = this.resolveEventId(waveNum, currentSchedule.eventSlot);
+      this.startEventWave(eventId);
     } else if (currentSchedule.type === 'boss') {
       this.startBossWave(currentSchedule.bossIndex);
     } else {
-      this.startBattleWave(currentSchedule.subjectId);
+      const subjectId = currentSchedule.subjectId || this.resolveTrackSubject(waveNum, currentSchedule.trackSlot);
+      this.startBattleWave(subjectId);
     }
+  }
+
+  // 2·3학년 전투 웨이브의 과목을 트랙별 조합(trackSubjectRoutes)에서 조회
+  // (1학년 공통과목은 currentSchedule.subjectId로 고정되어 있어 이 함수를 타지 않음)
+  resolveTrackSubject(waveNum, slot) {
+    const trackId = this.state.track ? this.state.track.id : 'tech';
+    const yearKey = waveNum <= 32 ? 'year2' : 'year3';
+    const route = GAME_DATA.trackSubjectRoutes[trackId];
+    return route[yearKey][slot];
+  }
+
+  // 이벤트 웨이브의 실제 이벤트를 후보 풀(eventRoutes)에서 랜덤 선택
+  // 1학년은 트랙 공통 풀, 2·3학년은 트랙별 풀에서 조회 — 같은 트랙 재도전 시에도 매번 다른 이벤트가 나올 수 있음
+  resolveEventId(waveNum, slot) {
+    let pool;
+    if (waveNum <= 16) {
+      pool = GAME_DATA.eventRoutes.common[slot];
+    } else {
+      const trackId = this.state.track ? this.state.track.id : 'tech';
+      const yearKey = waveNum <= 32 ? 'year2' : 'year3';
+      pool = GAME_DATA.eventRoutes.byTrack[trackId][yearKey][slot];
+    }
+    return pool[Math.floor(Math.random() * pool.length)];
   }
 
   // 7. 배틀 웨이브 시작
