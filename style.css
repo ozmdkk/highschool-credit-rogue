@@ -431,6 +431,44 @@ body {
   cursor: not-allowed;
 }
 
+.continue-game-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.btn-continue-game {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  padding: clamp(9px, 1.4vh, 12px) clamp(22px, 3.5vw, 36px);
+  font-size: clamp(0.92rem, 1.5vw, 1.1rem);
+  font-weight: 800;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-continue-game:hover {
+  transform: scale(1.03);
+}
+
+.btn-delete-save {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.72rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 2px 4px;
+}
+
+.btn-delete-save:hover {
+  color: #f87171;
+}
+
 /* ==========================================================================
    2. 배틀 화면 (글자 크기 & 체력 바 가독성 극대화)
    ========================================================================== */

@@ -3,6 +3,8 @@
 // 속성 상성(Type Matchup) & 양방향 가변 데미지 & 진학부장 오리엔테이션 스토리
 // ==========================================================================
 
+const SAVE_KEY = 'creditRogueSave_v1';
+
 class CreditRogueGame {
   constructor() {
     this.state = {
@@ -16,8 +18,8 @@ class CreditRogueGame {
       introStep: 0,
       
       // 멘탈 = 체력(HP)
-      playerHp: 100,
-      maxPlayerHp: 100,
+      playerHp: BALANCE_CONFIG.start.playerHp,
+      maxPlayerHp: BALANCE_CONFIG.start.playerHp,
 
       // 4대 핵심 역량 스탯
       stats: {
@@ -35,7 +37,7 @@ class CreditRogueGame {
       battleTurn: 1,
       skillCooldown: 0,
       isGuarding: false,
-      mentorUses: 2,
+      mentorUses: BALANCE_CONFIG.start.mentorUses,
       currentQuizType: 'normal',
       
       completedSubjects: [],
@@ -50,6 +52,9 @@ class CreditRogueGame {
       isGroggy: false
     };
 
+    // 몬스터 스프라이트 이미지 존재 여부 캐시 (enemyId -> true/false), 적별로 1회만 검사
+    this.spriteCache = {};
+
     // 진학부장 오기준 선생님 오리엔테이션 대사집
     this.introDialogues = [
       "고등학교 입학을 진심으로 축하한다! 🎉 나는 너의 3년 고교생활과 192학점 설계를 함께할 진학지도부장 '오기준' 선생님이란다.",
@@ -60,6 +65,7 @@ class CreditRogueGame {
 
     this.initElements();
     this.initEvents();
+    this.refreshContinueButton();
     this.switchView('title');
     this.renderTrackSelection();
   }
@@ -88,6 +94,11 @@ class CreditRogueGame {
     this.btnDialogNext = document.getElementById('btn-dialog-next');
     this.trackSelectionWrap = document.getElementById('track-selection-wrapper');
 
+    // 이어하기(세이브) 요소
+    this.continueGameWrap = document.getElementById('continue-game-wrap');
+    this.btnContinueGame = document.getElementById('btn-continue-game');
+    this.btnDeleteSave = document.getElementById('btn-delete-save');
+
     // 배틀 요소
     this.elEnemyName = document.getElementById('enemy-name');
     this.elEnemyBadge = document.getElementById('enemy-type-badge');
@@ -98,7 +109,6 @@ class CreditRogueGame {
     this.elEnemyBox = document.getElementById('enemy-status-box');
 
     this.elPlayerName = document.getElementById('player-name');
-    this.elPlayerBadge = document.getElementById('player-track-badge');
     this.elPlayerTrackBadge = document.getElementById('player-track-badge');
     this.elPlayerElementBadge = document.getElementById('player-element-badge');
     this.elPlayerHpBar = document.getElementById('player-hp-bar');
@@ -186,6 +196,18 @@ class CreditRogueGame {
     this.btnDialogNext.addEventListener('click', () => {
       window.soundEngine.playClick();
       this.advanceIntroDialogue();
+    });
+
+    // 저장된 게임 이어하기 / 삭제
+    this.btnContinueGame.addEventListener('click', () => {
+      window.soundEngine.playClick();
+      this.loadGame();
+    });
+
+    this.btnDeleteSave.addEventListener('click', () => {
+      window.soundEngine.playClick();
+      this.clearSave();
+      this.refreshContinueButton();
     });
 
     this.btnStart.addEventListener('click', () => {
@@ -320,15 +342,86 @@ class CreditRogueGame {
     });
   }
 
+  // 세이브/이어하기: 웨이브 시작 시점(적 조우 전) 상태를 체크포인트로 저장
+  saveGame() {
+    const s = this.state;
+    const snapshot = {
+      wave: s.wave,
+      track: s.track,
+      playerHp: s.playerHp,
+      maxPlayerHp: s.maxPlayerHp,
+      stats: { ...s.stats },
+      credits: s.credits,
+      targetCredits: s.targetCredits,
+      creativeCredits: s.creativeCredits,
+      mentorUses: s.mentorUses,
+      skillCooldown: s.skillCooldown,
+      completedSubjects: s.completedSubjects,
+      isGroggy: s.isGroggy
+    };
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(snapshot));
+    } catch (e) {
+      // 저장 공간 부족 등 예외는 무시 (세이브 실패해도 진행에는 지장 없음)
+    }
+  }
+
+  readSave() {
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (!data || typeof data.wave !== 'number' || !data.track) return null;
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  clearSave() {
+    try {
+      localStorage.removeItem(SAVE_KEY);
+    } catch (e) {
+      // 접근 불가 환경(프라이빗 모드 등)은 무시
+    }
+  }
+
+  hasSavedGame() {
+    return !!this.readSave();
+  }
+
+  // 타이틀 화면의 "이어하기" 버튼 표시 여부 갱신
+  refreshContinueButton() {
+    this.continueGameWrap.style.display = this.hasSavedGame() ? 'flex' : 'none';
+  }
+
+  // 저장된 체크포인트를 불러와 해당 웨이브 시작 지점으로 복귀
+  loadGame() {
+    const saved = this.readSave();
+    if (!saved) return false;
+
+    Object.assign(this.state, saved);
+    this.state.battleTurn = 1;
+    this.state.isGuarding = false;
+    this.state.isEnraged = false;
+
+    this.mainHeader.classList.remove('intro-mode');
+    this.elWave.style.display = 'inline-block';
+    this.elCreditTracker.style.display = 'flex';
+
+    this.startWave(this.state.wave);
+    return true;
+  }
+
   // 2. 게임 시작 (배틀 화면으로 전환)
   startGame() {
     this.state.wave = 1;
-    this.state.credits = 12;
-    this.state.creativeCredits = 2;
-    this.state.playerHp = 100;
-    this.state.maxPlayerHp = 100;
+    this.state.credits = BALANCE_CONFIG.start.credits;
+    this.state.creativeCredits = BALANCE_CONFIG.start.creativeCredits;
+    this.state.playerHp = BALANCE_CONFIG.start.playerHp;
+    this.state.maxPlayerHp = BALANCE_CONFIG.start.playerHp;
     this.state.completedSubjects = [];
-    this.state.mentorUses = 2;
+    this.state.mentorUses = BALANCE_CONFIG.start.mentorUses;
     this.state.skillCooldown = 0;
 
     if (this.state.track && this.state.track.initialStats) {
@@ -354,8 +447,8 @@ class CreditRogueGame {
     this.elStatComm.textContent = s.community;
 
     this.tipAcademic.textContent = `퀴즈 데미지 +${s.academic}%`;
-    this.tipCareer.textContent = `크리티컬 확률 ${Math.min(85, Math.round(s.career * 1.5))}%`;
-    this.tipSelf.textContent = `방어 시 회복 +${Math.round(s.selfDirected / 3)}`;
+    this.tipCareer.textContent = `크리티컬 확률 ${Math.min(BALANCE_CONFIG.quizAttack.critChanceCap, Math.round(s.career * BALANCE_CONFIG.quizAttack.critChanceCareerMult))}%`;
+    this.tipSelf.textContent = `방어 시 회복 +${Math.round(s.selfDirected / BALANCE_CONFIG.guard.healSelfDirectedDivisor)}`;
     this.tipComm.textContent = `이벤트 고보상 해금 & 멘토링 찬스`;
   }
 
@@ -403,20 +496,22 @@ class CreditRogueGame {
 
     const playerDef = GAME_DATA.elements[playerElemKey];
     if (playerDef.strongAgainst === enemyElemKey) {
-      return { 
-        type: 'super_effective', 
-        playerMult: 1.5, 
-        enemyMult: 0.75, 
-        label: '🔥 우세 상성 (+50% / 적 공격 -25%)', 
-        color: '#22c55e' 
+      const m = BALANCE_CONFIG.matchup.superEffective;
+      return {
+        type: 'super_effective',
+        playerMult: m.playerMult,
+        enemyMult: m.enemyMult,
+        label: '🔥 우세 상성 (+50% / 적 공격 -25%)',
+        color: '#22c55e'
       };
     } else if (playerDef.weakAgainst === enemyElemKey) {
-      return { 
-        type: 'not_effective', 
-        playerMult: 0.75, 
-        enemyMult: 1.3, 
-        label: '⚠️ 열세 상성 (-25% / 적 공격 +30%)', 
-        color: '#ef4444' 
+      const m = BALANCE_CONFIG.matchup.notEffective;
+      return {
+        type: 'not_effective',
+        playerMult: m.playerMult,
+        enemyMult: m.enemyMult,
+        label: '⚠️ 열세 상성 (-25% / 적 공격 +30%)',
+        color: '#ef4444'
       };
     } else {
       return { type: 'neutral', playerMult: 1.0, enemyMult: 1.0, label: '동등 속성 (1.0x)', color: '#cbd5e1' };
@@ -448,8 +543,8 @@ class CreditRogueGame {
     this.elMentorCountText.textContent = this.state.mentorUses;
 
     if (this.state.track) {
-      this.elPlayerBadge.textContent = this.state.track.name.split(' ')[0];
-      this.elPlayerBadge.style.background = this.state.track.color;
+      this.elPlayerTrackBadge.textContent = this.state.track.name.split(' ')[0];
+      this.elPlayerTrackBadge.style.background = this.state.track.color;
 
       const pElem = GAME_DATA.elements[this.state.track.element];
       if (pElem) {
@@ -471,7 +566,7 @@ class CreditRogueGame {
     this.elEnemySprite.classList.remove('enraged-monster');
 
     // 자기주도역량 비례 자연 회복
-    const regen = Math.round(this.state.stats.selfDirected / 4);
+    const regen = Math.round(this.state.stats.selfDirected / BALANCE_CONFIG.regenPerWave.selfDirectedDivisor);
     if (regen > 0 && this.state.playerHp < this.state.maxPlayerHp) {
       this.state.playerHp = Math.min(this.state.maxPlayerHp, this.state.playerHp + regen);
     }
@@ -480,6 +575,9 @@ class CreditRogueGame {
       this.triggerEnding();
       return;
     }
+
+    // 웨이브 시작 = 세이브 체크포인트 (적 조우 전 상태로 이어하기)
+    this.saveGame();
 
     const currentSchedule = GAME_DATA.waveSchedule[waveNum - 1];
 
@@ -504,6 +602,7 @@ class CreditRogueGame {
     this.state.currentQuiz = subject.quizzes[qIndex];
 
     this.switchView('battle');
+    this.loadEnemySprite(subject);
     this.updateBattleUI();
 
     const matchup = this.getMatchupEffectiveness();
@@ -523,6 +622,7 @@ class CreditRogueGame {
 
     window.soundEngine.playBossEncounter();
     this.switchView('battle');
+    this.loadEnemySprite(boss);
     this.updateBattleUI();
     this.setDialog(`👑 [보스전] ${boss.name}이 등장했다! 강력한 시험 공세를 방어하며 격파하라!`);
   }
@@ -533,16 +633,6 @@ class CreditRogueGame {
 
     this.elEnemyName.textContent = enemy.name;
     this.elEnemyBadge.textContent = enemy.categoryName || '학기말 보스';
-    // 적 스프라이트 이미지 자동 감지 및 로딩 (이미지 파일 존재 시 자동 표시, 없을 시 이모지 폴백)
-    const imgFilename = enemy.id ? `${enemy.id}.png` : '';
-    const testImg = new Image();
-    testImg.onload = () => {
-      this.elEnemySprite.innerHTML = `<img src="images/${imgFilename}" alt="${enemy.name}" style="width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));">`;
-    };
-    testImg.onerror = () => {
-      this.elEnemySprite.textContent = enemy.icon || '📖';
-    };
-    testImg.src = `images/${imgFilename}`;
 
     // 적 속성 배지
     if (enemy.element === 'all') {
@@ -560,11 +650,13 @@ class CreditRogueGame {
     this.elEnemyHpText.textContent = `${this.state.currentEnemyHp} / ${this.state.maxEnemyHp}`;
     this.setHpColor(this.elEnemyHpBar, enemyHpPct);
 
-    // 몬스터 HP 35% 이하 시 분노 각성 모드
-    if (enemyHpPct <= 35 && !this.state.isEnraged && this.state.currentEnemyHp > 0) {
+    // 몬스터 HP 저하 시 분노 각성 모드
+    const enrageCfg = BALANCE_CONFIG.enrage;
+    if (enemyHpPct <= enrageCfg.hpThresholdPct && !this.state.isEnraged && this.state.currentEnemyHp > 0) {
       this.state.isEnraged = true;
       this.elEnemySprite.classList.add('enraged-monster');
-      this.setDialog(`⚠️ [경고] [${enemy.name}]이(가) '시험 직전 벼락치기 각성 모드'에 돌입했습니다! 공격력이 35% 상승합니다!`);
+      const boostPct = Math.round((enrageCfg.damageMult - 1) * 100);
+      this.setDialog(`⚠️ [경고] [${enemy.name}]이(가) '시험 직전 벼락치기 각성 모드'에 돌입했습니다! 공격력이 ${boostPct}% 상승합니다!`);
     }
 
     // 플레이어 멘탈(HP)바 & 텍스트
@@ -605,6 +697,36 @@ class CreditRogueGame {
     this.elBtnGuard.disabled = false;
   }
 
+  // 몬스터 스프라이트 이미지 로드 (적별 1회만 존재 여부 검사 후 캐시, 이후엔 캐시된 결과 재사용)
+  loadEnemySprite(enemy) {
+    const id = enemy.id;
+    if (!id) {
+      this.elEnemySprite.textContent = enemy.icon || '📖';
+      return;
+    }
+
+    const cached = this.spriteCache[id];
+    if (cached === true) {
+      this.elEnemySprite.innerHTML = `<img src="images/${id}.png" alt="${enemy.name}" style="width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));">`;
+      return;
+    }
+    if (cached === false) {
+      this.elEnemySprite.textContent = enemy.icon || '📖';
+      return;
+    }
+
+    const testImg = new Image();
+    testImg.onload = () => {
+      this.spriteCache[id] = true;
+      this.elEnemySprite.innerHTML = `<img src="images/${id}.png" alt="${enemy.name}" style="width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));">`;
+    };
+    testImg.onerror = () => {
+      this.spriteCache[id] = false;
+      this.elEnemySprite.textContent = enemy.icon || '📖';
+    };
+    testImg.src = `images/${id}.png`;
+  }
+
   setHpColor(element, pct) {
     if (pct > 50) element.style.background = 'var(--hp-green)';
     else if (pct > 25) element.style.background = 'var(--hp-yellow)';
@@ -613,6 +735,14 @@ class CreditRogueGame {
 
   setDialog(text) {
     this.elDialog.textContent = text;
+  }
+
+  // 긴급 경고/알림 모달 오픈 (확인 버튼 문구도 상황에 맞게 커스텀)
+  showNotice(title, bodyHtml, confirmText = '확인') {
+    this.noticeTitle.textContent = title;
+    this.noticeBody.innerHTML = bodyHtml;
+    this.btnNoticeConfirm.textContent = confirmText;
+    this.noticeOverlay.classList.add('active');
   }
 
   // 9. 퀴즈 모달 오픈
@@ -685,30 +815,32 @@ class CreditRogueGame {
 
   // 11. 플레이어 공격 성공 (가변 데미지 + 상성 + 크리티컬)
   handlePlayerAttackSuccess() {
+    const cfg = BALANCE_CONFIG.quizAttack;
     const academic = this.state.stats.academic;
     const career = this.state.stats.career;
     const isSkill = (this.state.currentQuizType === 'skill');
 
-    let basePower = isSkill ? (115 + Math.random() * 35) : (48 + Math.random() * 22);
+    const power = isSkill ? cfg.skill : cfg.normal;
+    let basePower = power.min + Math.random() * power.range;
     let damage = basePower * (1 + academic / 100);
 
     const matchup = this.getMatchupEffectiveness();
     damage = damage * matchup.playerMult;
 
-    const rngVariance = 0.86 + Math.random() * 0.28;
+    const rngVariance = cfg.rngVarianceMin + Math.random() * cfg.rngVarianceRange;
     damage = damage * rngVariance;
 
     let isCrit = false;
-    const critChance = Math.min(85, Math.round(career * 1.5 + (isSkill ? 25 : 0)));
+    const critChance = Math.min(cfg.critChanceCap, Math.round(career * cfg.critChanceCareerMult + (isSkill ? cfg.critChanceSkillBonus : 0)));
     if (Math.random() * 100 < critChance) {
       isCrit = true;
-      damage = damage * 1.55;
+      damage = damage * cfg.critDamageMult;
     }
 
-    const finalDamage = Math.max(12, Math.round(damage));
+    const finalDamage = Math.max(cfg.minDamage, Math.round(damage));
 
     if (isSkill) {
-      this.state.skillCooldown = 3;
+      this.state.skillCooldown = cfg.skillCooldownTurns;
     }
 
     this.state.currentEnemyHp = Math.max(0, this.state.currentEnemyHp - finalDamage);
@@ -746,26 +878,28 @@ class CreditRogueGame {
   // 12. 퀴즈 오답 시
   handlePlayerAttackFail() {
     if (this.state.currentQuizType === 'skill') {
-      this.state.skillCooldown = 3;
+      this.state.skillCooldown = BALANCE_CONFIG.quizAttack.skillCooldownTurns;
     }
     this.setDialog(`개념 혼동으로 공격이 빗나갔다! 몬스터의 반격이 다가온다!`);
     setTimeout(() => {
-      this.triggerEnemyTurn(1.3);
+      this.triggerEnemyTurn(BALANCE_CONFIG.enemyAttack.failPenaltyMult);
     }, 1000);
   }
 
   // 13. 오답노트 방어 액션
   executeGuardAction() {
+    const cfg = BALANCE_CONFIG.guard;
     this.state.isGuarding = true;
     this.elPlayerBox.classList.add('shield-active');
 
-    const baseHeal = 15 + Math.round(this.state.stats.selfDirected / 3);
-    const healVal = Math.round(baseHeal * (0.9 + Math.random() * 0.25));
+    const baseHeal = cfg.healBase + Math.round(this.state.stats.selfDirected / cfg.healSelfDirectedDivisor);
+    const healVal = Math.round(baseHeal * (cfg.healVarianceMin + Math.random() * cfg.healVarianceRange));
 
     this.state.playerHp = Math.min(this.state.maxPlayerHp, this.state.playerHp + healVal);
     this.updateBattleUI();
 
-    this.setDialog(`🛡️ [오답노트 방어 태세] 멘탈을 +${healVal} 회복하고 이번 턴 적의 공격을 60% 경감합니다!`);
+    const reductionPct = Math.round((1 - cfg.enemyDamageMult) * 100);
+    this.setDialog(`🛡️ [오답노트 방어 태세] 멘탈을 +${healVal} 회복하고 이번 턴 적의 공격을 ${reductionPct}% 경감합니다!`);
 
     setTimeout(() => {
       this.triggerEnemyTurn();
@@ -774,11 +908,14 @@ class CreditRogueGame {
 
   // 14. 친구 멘토링 찬스 (50:50)
   executeMentorAction() {
+    window.soundEngine.playClick();
     if (this.state.mentorUses <= 0) {
-      alert('친구 멘토링 찬스가 모두 소진되었습니다! 보상 카드에서 충전할 수 있습니다.');
+      this.showNotice(
+        '🤝 멘토링 찬스 소진',
+        '친구 멘토링 찬스가 모두 소진되었습니다!<br>보상 카드에서 "찬스 충전" 카드를 선택하면 다시 채울 수 있어요.'
+      );
       return;
     }
-    window.soundEngine.playClick();
     this.state.mentorUses--;
     this.updateGlobalHeader();
 
@@ -802,32 +939,33 @@ class CreditRogueGame {
 
   // 15. 몬스터 반격 턴
   triggerEnemyTurn(penaltyMultiplier = 1.0) {
+    const cfg = BALANCE_CONFIG.enemyAttack;
     const enemy = this.state.currentEnemy;
-    let baseDmg = enemy.attackDmg || 16;
+    let baseDmg = enemy.attackDmg || cfg.fallbackDmg;
 
     const matchup = this.getMatchupEffectiveness();
     let dmg = baseDmg * matchup.enemyMult;
 
     if (this.state.isEnraged) {
-      dmg = dmg * 1.35;
+      dmg = dmg * BALANCE_CONFIG.enrage.damageMult;
     }
 
-    const rngVariance = 0.85 + Math.random() * 0.30;
+    const rngVariance = cfg.rngVarianceMin + Math.random() * cfg.rngVarianceRange;
     dmg = dmg * rngVariance * penaltyMultiplier;
 
     let isEnemyCrit = false;
-    if (Math.random() * 100 < 15) {
+    if (Math.random() * 100 < cfg.critChance) {
       isEnemyCrit = true;
-      dmg = dmg * 1.4;
+      dmg = dmg * cfg.critDamageMult;
     }
 
     if (this.state.isGuarding) {
-      dmg = dmg * 0.4;
+      dmg = dmg * BALANCE_CONFIG.guard.enemyDamageMult;
       this.state.isGuarding = false;
       this.elPlayerBox.classList.remove('shield-active');
     }
 
-    const finalDmg = Math.max(4, Math.round(dmg));
+    const finalDmg = Math.max(cfg.minDamage, Math.round(dmg));
 
     this.state.playerHp = Math.max(0, this.state.playerHp - finalDmg);
     this.elPlayerBox.classList.add('shake-damage');
@@ -860,18 +998,18 @@ class CreditRogueGame {
   // 16. 멘탈 소진 시 최소성취수준 보장지도(1회) & 2회 소진 시 과목 미이수 엔딩
   handlePlayerKnockout() {
     if (!this.state.isGroggy) {
-      // 1차 쓰러짐: 40% 체력으로 보장지도 부활 & 그로기 상태 부여
+      // 1차 쓰러짐: 보장지도 부활 & 그로기 상태 부여
       this.state.isGroggy = true;
-      this.state.playerHp = Math.round(this.state.maxPlayerHp * 0.40);
+      this.state.playerHp = Math.round(this.state.maxPlayerHp * BALANCE_CONFIG.groggy.reviveHpPct);
       window.soundEngine.playDamage();
       this.updateBattleUI();
 
-      this.noticeTitle.textContent = '최소성취수준 미도달 위기 경보!';
-      this.noticeBody.innerHTML = `
-        멘탈(HP)이 0이 되어 <strong>[최소성취수준 보장지도 대상자(그로기 상태)]</strong>로 지정되었습니다!<br><br>
-        선생님의 특별 보충지도를 이수하며 <strong>멘탈 40%로 기사회생</strong>했지만, 이 상태에서 한 번 더 쓰러지면 과목 <strong>'미이수(I등급)'</strong>로 즉시 최종 탈락(게임 오버)합니다!
-      `;
-      this.noticeOverlay.classList.add('active');
+      this.showNotice(
+        '최소성취수준 미도달 위기 경보!',
+        `멘탈(HP)이 0이 되어 <strong>[최소성취수준 보장지도 대상자(그로기 상태)]</strong>로 지정되었습니다!<br><br>
+        선생님의 특별 보충지도를 이수하며 <strong>멘탈 40%로 기사회생</strong>했지만, 이 상태에서 한 번 더 쓰러지면 과목 <strong>'미이수(I등급)'</strong>로 즉시 최종 탈락(게임 오버)합니다!`,
+        '확인하고 재도전하기 ➡️'
+      );
 
       this.setDialog('⚠️ [최소성취수준 보장지도 이수 중] 멘탈 40%로 회복! 한 번 더 쓰러지면 과목 미이수(I등급)로 탈락합니다!');
     } else {
@@ -895,7 +1033,7 @@ class CreditRogueGame {
       this.setDialog(`✨ [학년말 종합평가 통과!] 학업 성취를 인정받아 '최소성취수준 보장지도' 상태에서 벗어났습니다!`);
     }
 
-    const earnedCredits = this.state.isBossWave ? 10 : (enemy.credits || 4);
+    const earnedCredits = this.state.isBossWave ? BALANCE_CONFIG.victory.bossCredits : (enemy.credits || BALANCE_CONFIG.victory.defaultSubjectCredits);
     this.state.credits = Math.min(this.state.targetCredits, this.state.credits + earnedCredits);
 
     if (enemy.statRewards) {
@@ -911,7 +1049,7 @@ class CreditRogueGame {
         category: enemy.category,
         categoryName: enemy.categoryName,
         element: enemy.element,
-        credits: enemy.credits || 4,
+        credits: enemy.credits || BALANCE_CONFIG.victory.defaultSubjectCredits,
         icon: enemy.icon
       });
     }
@@ -1103,6 +1241,7 @@ class CreditRogueGame {
 
   // 22. 최종 졸업 & 멀티엔딩 판정 (정상 졸업)
   triggerEnding() {
+    this.clearSave();
     this.switchView('ending');
     window.soundEngine.playEndingFanfare();
 
@@ -1135,6 +1274,7 @@ class CreditRogueGame {
 
   // 23. 최소성취수준 미도달 & 과목 미이수(I등급) 게임오버 엔딩
   triggerIncompleteEnding() {
+    this.clearSave();
     this.switchView('ending');
     window.soundEngine.playDamage();
 
@@ -1179,6 +1319,7 @@ class CreditRogueGame {
 
     this.switchView('title');
     document.querySelectorAll('.track-card').forEach(c => c.classList.remove('selected'));
+    this.refreshContinueButton();
   }
 }
 

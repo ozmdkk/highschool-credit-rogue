@@ -1,4 +1,79 @@
 // 2022 개정 교육과정 고교학점제 공시 과목 편제표 기반 데이터
+
+// 전투/밸런스 수치 전용 설정 (app.js의 데미지 공식 등에서 참조). 값 자체는 기존과 동일하며,
+// 코드에 흩어져 있던 매직 넘버를 튜닝하기 쉽도록 한 곳으로 모은 것입니다.
+const BALANCE_CONFIG = {
+  // 게임 시작 시 초기값
+  start: {
+    playerHp: 100,
+    credits: 12,
+    creativeCredits: 2,
+    mentorUses: 2
+  },
+
+  // 웨이브 시작 시 자기주도역량 비례 자연 회복
+  regenPerWave: {
+    selfDirectedDivisor: 4
+  },
+
+  // 퀴즈 공격(개념 퀴즈 / 심화 탐구 스킬) 데미지 공식
+  quizAttack: {
+    normal: { min: 48, range: 22 },
+    skill: { min: 115, range: 35 },
+    rngVarianceMin: 0.86,
+    rngVarianceRange: 0.28,
+    critChanceCareerMult: 1.5,
+    critChanceSkillBonus: 25,
+    critChanceCap: 85,
+    critDamageMult: 1.55,
+    minDamage: 12,
+    skillCooldownTurns: 3
+  },
+
+  // 오답노트 방어 (회복 + 적 공격 경감)
+  guard: {
+    healBase: 15,
+    healSelfDirectedDivisor: 3,
+    healVarianceMin: 0.9,
+    healVarianceRange: 0.25,
+    enemyDamageMult: 0.4 // 방어 시 적 데미지를 이 배율만큼만 적용 (= 60% 경감)
+  },
+
+  // 몬스터 반격 데미지 공식
+  enemyAttack: {
+    fallbackDmg: 16,
+    rngVarianceMin: 0.85,
+    rngVarianceRange: 0.30,
+    critChance: 15,
+    critDamageMult: 1.4,
+    minDamage: 4,
+    failPenaltyMult: 1.3 // 퀴즈 오답 시 반격 데미지 배율
+  },
+
+  // 몬스터 HP 저하 시 분노 각성 모드
+  enrage: {
+    hpThresholdPct: 35,
+    damageMult: 1.35
+  },
+
+  // 속성 상성 배율
+  matchup: {
+    superEffective: { playerMult: 1.5, enemyMult: 0.75 },
+    notEffective: { playerMult: 0.75, enemyMult: 1.3 }
+  },
+
+  // 전투 승리 시 학점 보상
+  victory: {
+    bossCredits: 10,
+    defaultSubjectCredits: 4
+  },
+
+  // 최소성취수준 보장지도(그로기) 회복 비율
+  groggy: {
+    reviveHpPct: 0.40
+  }
+};
+
 const GAME_DATA = {
   // 4대 교과 속성 정의
   elements: {
