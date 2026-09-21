@@ -45,6 +45,7 @@ class CreditRogueGame {
       currentEnemyHp: 240,
       maxEnemyHp: 240,
       currentQuiz: null,
+      currentQuizOptionOrder: null, // 현재 퀴즈의 보기 표시 순서 (표시 인덱스 -> 원본 인덱스)
       quizQueue: null, // 현재 몬스터전 동안 아직 안 낸 퀴즈 목록 (다 소진되면 재셔플)
       isBossWave: false,
       isEnraged: false,
@@ -838,22 +839,27 @@ class CreditRogueGame {
     const quiz = this.state.currentQuiz;
     if (!quiz) return;
 
+    // 보기를 매번 셔플해서 정답이 항상 같은 자리(1번)에 나오지 않게 한다.
+    // quiz.ans는 원본 인덱스이므로, order[표시 인덱스] = 원본 인덱스로 매핑해 정답을 추적한다.
+    const order = this.shuffleArray(quiz.options.map((_, i) => i));
+    this.state.currentQuizOptionOrder = order;
+
     const isSkill = (this.state.currentQuizType === 'skill');
     this.quizBadge.innerHTML = `<span>📝 [${this.state.currentEnemy.name}] ${isSkill ? '🔥 심화 탐구 퀴즈' : '개념 확인 퀴즈'}</span>`;
     this.quizQuestion.textContent = quiz.q;
     this.quizOptionsList.innerHTML = '';
     this.quizExpBox.style.display = 'none';
 
-    quiz.options.forEach((opt, idx) => {
+    order.forEach((originalIdx, displayIdx) => {
       const btn = document.createElement('button');
       btn.className = 'quiz-option-btn';
       btn.innerHTML = `
-        <span class="quiz-option-num">${idx + 1}</span>
-        <span>${opt}</span>
+        <span class="quiz-option-num">${displayIdx + 1}</span>
+        <span>${quiz.options[originalIdx]}</span>
       `;
 
       btn.addEventListener('click', () => {
-        this.submitAnswer(idx, btn);
+        this.submitAnswer(displayIdx, btn);
       });
 
       this.quizOptionsList.appendChild(btn);
@@ -865,7 +871,8 @@ class CreditRogueGame {
   // 10. 퀴즈 정답 제출 처리
   submitAnswer(chosenIdx, btnElem) {
     const quiz = this.state.currentQuiz;
-    let isCorrect = (chosenIdx === quiz.ans);
+    const order = this.state.currentQuizOptionOrder || quiz.options.map((_, i) => i);
+    let isCorrect = (order[chosenIdx] === quiz.ans);
 
     // 🔮 족집게 예상문제집: 오답이어도 1회 자동 정답 처리
     let usedAutoCorrect = false;
@@ -897,8 +904,9 @@ class CreditRogueGame {
       btnElem.style.borderColor = '#ef4444';
       window.soundEngine.playDamage();
 
-      if (allBtns[quiz.ans]) {
-        allBtns[quiz.ans].style.borderColor = '#22c55e';
+      const correctDisplayIdx = order.indexOf(quiz.ans);
+      if (allBtns[correctDisplayIdx]) {
+        allBtns[correctDisplayIdx].style.borderColor = '#22c55e';
       }
 
       this.quizExpBox.style.display = 'block';
@@ -1050,11 +1058,13 @@ class CreditRogueGame {
 
     setTimeout(() => {
       const quiz = this.state.currentQuiz;
+      const order = this.state.currentQuizOptionOrder || quiz.options.map((_, i) => i);
+      const correctDisplayIdx = order.indexOf(quiz.ans);
       const allBtns = this.quizOptionsList.querySelectorAll('.quiz-option-btn');
       let eliminated = 0;
 
       allBtns.forEach((btn, idx) => {
-        if (idx !== quiz.ans && eliminated < 2) {
+        if (idx !== correctDisplayIdx && eliminated < 2) {
           btn.disabled = true;
           btn.style.opacity = '0.2';
           eliminated++;
