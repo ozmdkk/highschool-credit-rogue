@@ -58,7 +58,13 @@ class CreditRogueGame {
 
       // 에픽 보상카드 전용 소모형 충전 (자동 정답 / 오답 반격 무효화)
       autoCorrectCharges: 0,
-      failInsuranceCharges: 0
+      failInsuranceCharges: 0,
+
+      // 플레이 스타일 기반 히든 엔딩 판정을 위한 누적 기록
+      correctAnswerCount: 0,
+      wrongAnswerCount: 0,
+      skillUseCount: 0,
+      groggyCount: 0
     };
 
     // 몬스터 스프라이트 이미지 존재 여부 캐시 (enemyId -> true/false), 적별로 1회만 검사
@@ -392,7 +398,11 @@ class CreditRogueGame {
       completedSubjects: s.completedSubjects,
       isGroggy: s.isGroggy,
       autoCorrectCharges: s.autoCorrectCharges,
-      failInsuranceCharges: s.failInsuranceCharges
+      failInsuranceCharges: s.failInsuranceCharges,
+      correctAnswerCount: s.correctAnswerCount,
+      wrongAnswerCount: s.wrongAnswerCount,
+      skillUseCount: s.skillUseCount,
+      groggyCount: s.groggyCount
     };
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify(snapshot));
@@ -460,6 +470,10 @@ class CreditRogueGame {
     this.state.skillCooldown = 0;
     this.state.autoCorrectCharges = 0;
     this.state.failInsuranceCharges = 0;
+    this.state.correctAnswerCount = 0;
+    this.state.wrongAnswerCount = 0;
+    this.state.skillUseCount = 0;
+    this.state.groggyCount = 0;
 
     if (this.state.track && this.state.track.initialStats) {
       this.state.stats = { ...this.state.track.initialStats };
@@ -898,6 +912,16 @@ class CreditRogueGame {
     const order = this.state.currentQuizOptionOrder || quiz.options.map((_, i) => i);
     let isCorrect = (order[chosenIdx] === quiz.ans);
 
+    // 히든 엔딩 판정용 누적 기록 (족집게 예상문제집으로 구제되기 전, 실제 정답 여부 기준)
+    if (isCorrect) {
+      this.state.correctAnswerCount++;
+    } else {
+      this.state.wrongAnswerCount++;
+    }
+    if (this.state.currentQuizType === 'skill') {
+      this.state.skillUseCount++;
+    }
+
     // 🔮 족집게 예상문제집: 오답이어도 1회 자동 정답 처리
     let usedAutoCorrect = false;
     if (!isCorrect && this.state.autoCorrectCharges > 0) {
@@ -1175,6 +1199,7 @@ class CreditRogueGame {
     if (!this.state.isGroggy) {
       // 1차 쓰러짐: 보장지도 부활 & 그로기 상태 부여
       this.state.isGroggy = true;
+      this.state.groggyCount++;
       this.state.playerHp = Math.round(this.state.maxPlayerHp * BALANCE_CONFIG.groggy.reviveHpPct);
       window.soundEngine.playDamage();
       this.updateBattleUI();
@@ -1460,7 +1485,18 @@ class CreditRogueGame {
     let matchedEnding = null;
     const trackId = this.state.track ? this.state.track.id : 'tech';
 
-    matchedEnding = GAME_DATA.endings.find(e => e.track === trackId && this.state.credits >= e.minCredits);
+    // 히든 엔딩(플레이 스타일 기반) 우선 판정 — 트랙/학점 기준 엔딩보다 먼저 확인한다
+    if (this.state.credits >= this.state.targetCredits && this.state.correctAnswerCount > 0 && this.state.wrongAnswerCount === 0) {
+      matchedEnding = GAME_DATA.endings.find(e => e.id === 'perfect_scholar');
+    } else if (this.state.skillUseCount >= 25) {
+      matchedEnding = GAME_DATA.endings.find(e => e.id === 'skill_specialist');
+    } else if (this.state.groggyCount >= 2 && this.state.credits >= 150) {
+      matchedEnding = GAME_DATA.endings.find(e => e.id === 'comeback_hero');
+    }
+
+    if (!matchedEnding) {
+      matchedEnding = GAME_DATA.endings.find(e => e.track === trackId && this.state.credits >= e.minCredits);
+    }
 
     if (!matchedEnding) {
       if (this.state.credits >= 170) {
@@ -1470,9 +1506,19 @@ class CreditRogueGame {
       }
     }
 
+    // 히든 엔딩은 어떤 기록으로 획득했는지 근거를 함께 보여준다
+    let achievementNote = '';
+    if (matchedEnding.id === 'perfect_scholar') {
+      achievementNote = `<br><span style="color:var(--gold); font-weight:700;">✨ 총 ${this.state.correctAnswerCount}문제 전원 정답 (오답 0회)로 달성한 히든 엔딩!</span>`;
+    } else if (matchedEnding.id === 'skill_specialist') {
+      achievementNote = `<br><span style="color:var(--gold); font-weight:700;">✨ 심화 탐구 스킬 ${this.state.skillUseCount}회 사용으로 달성한 히든 엔딩!</span>`;
+    } else if (matchedEnding.id === 'comeback_hero' && this.state.groggyCount >= 2) {
+      achievementNote = `<br><span style="color:var(--gold); font-weight:700;">✨ 최소성취수준 보장지도 ${this.state.groggyCount}회 극복으로 달성한 히든 엔딩!</span>`;
+    }
+
     document.getElementById('ending-badge').textContent = matchedEnding.badge;
     document.getElementById('ending-title').textContent = matchedEnding.title;
-    document.getElementById('ending-summary-text').textContent = matchedEnding.summary;
+    document.getElementById('ending-summary-text').innerHTML = `${matchedEnding.summary}${achievementNote}`;
     document.getElementById('ending-next-step').textContent = `🚀 진로 로드맵 제언: ${matchedEnding.nextStep}`;
 
     document.getElementById('end-stat-academic').textContent = this.state.stats.academic;
