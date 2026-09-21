@@ -10,8 +10,8 @@
 <body>
 
   <main id="game-container">
-    <!-- 레트로 CRT 스캔라인 효과 -->
-    <div class="scanlines"></div>
+    <!-- 레트로 CRT 스캔라인 효과 (순수 시각 장식) -->
+    <div class="scanlines" aria-hidden="true"></div>
 
     <!-- 상단 글로벌 상태 바 (Wave, 학년, 학점 진척도) -->
     <header class="game-header intro-mode" id="main-header">
@@ -29,7 +29,7 @@
             <div class="credit-progress-bar" id="credit-progress-bar"></div>
           </div>
         </div>
-        <button class="sound-toggle-btn" id="btn-sound-toggle" title="사운드 ON/OFF">🔊</button>
+        <button class="sound-toggle-btn" id="btn-sound-toggle" title="사운드 ON/OFF" aria-label="사운드 켜기/끄기" aria-pressed="true">🔊</button>
       </div>
     </header>
 
@@ -53,7 +53,7 @@
           <span class="mentor-name-badge">진학부장 오기준 선생님</span>
         </div>
         <div class="mentor-speech-content">
-          <div class="mentor-speech-bubble" id="mentor-speech-bubble">
+          <div class="mentor-speech-bubble" id="mentor-speech-bubble" aria-live="polite">
             "고등학교 입학을 진심으로 축하한다! 🎉 나는 너의 3년 고교생활과 192학점 설계를 함께할 진학지도부장 오기준 선생님이란다."
           </div>
           <div class="mentor-action-row">
@@ -98,7 +98,7 @@
           </div>
           <!-- 적 배틀 발판 -->
           <div class="battle-platform">
-            <div class="unit-sprite-wrap" id="enemy-sprite">📖</div>
+            <div class="unit-sprite-wrap" id="enemy-sprite" aria-hidden="true">📖</div>
           </div>
         </div>
 
@@ -131,7 +131,7 @@
 
             <!-- 플레이어 배틀 발판 & 아바타 -->
             <div class="battle-platform">
-              <div class="player-sprite-wrap" id="player-sprite">🧑‍🎓</div>
+              <div class="player-sprite-wrap" id="player-sprite" aria-hidden="true">🧑‍🎓</div>
             </div>
           </div>
 
@@ -157,7 +157,7 @@
 
       <!-- 전투 대화창 -->
       <div class="battle-dialog-box">
-        <p class="dialog-text" id="battle-dialog-text">야생의 과목이 나타났다!</p>
+        <p class="dialog-text" id="battle-dialog-text" aria-live="polite">야생의 과목이 나타났다!</p>
       </div>
 
       <!-- 하단 4대 전략 배틀 액션 패널 -->
@@ -269,10 +269,10 @@
     </section>
 
     <!-- 모달: 긴급 경고/알림 모달 (보장지도 발동 등) -->
-    <div class="notice-overlay" id="notice-overlay">
+    <div class="notice-overlay" id="notice-overlay" role="alertdialog" aria-modal="true" aria-labelledby="notice-title" aria-describedby="notice-body">
       <div class="notice-modal-box">
         <div class="notice-title-row">
-          <span class="notice-icon">⚠️</span>
+          <span class="notice-icon" aria-hidden="true">⚠️</span>
           <h3 class="notice-title" id="notice-title">최소성취수준 미도달 위기 경보!</h3>
         </div>
         <div class="notice-body" id="notice-body">
@@ -283,28 +283,28 @@
     </div>
 
     <!-- 모달: 퀴즈 풀이 모달 -->
-    <div class="quiz-overlay" id="quiz-overlay">
+    <div class="quiz-overlay" id="quiz-overlay" role="dialog" aria-modal="true" aria-labelledby="quiz-question-text">
       <div class="quiz-modal-box">
         <div class="quiz-header-badge" id="quiz-badge">
           <span>📝 2022 개정 교육과정 핵심 문제</span>
         </div>
-        <h3 class="quiz-question-text" id="quiz-question-text">
+        <h3 class="quiz-question-text" id="quiz-question-text" aria-live="assertive">
           문제가 여기에 출력됩니다.
         </h3>
         <div class="quiz-options-list" id="quiz-options-list">
           <!-- JS 동적 생성 -->
         </div>
-        <div class="quiz-exp-box" id="quiz-exp-box">
+        <div class="quiz-exp-box" id="quiz-exp-box" aria-live="polite">
           <!-- 정답 설명 -->
         </div>
       </div>
     </div>
 
     <!-- 모달: 나의 시간표 & 이수 과목 도감 모달 -->
-    <div class="deck-overlay" id="deck-overlay">
+    <div class="deck-overlay" id="deck-overlay" role="dialog" aria-modal="true" aria-labelledby="deck-modal-title">
       <div class="deck-modal-box">
         <div class="deck-header">
-          <h2>📋 나의 3개년 시간표 & 4대 역량 도감</h2>
+          <h2 id="deck-modal-title">📋 나의 3개년 시간표 & 4대 역량 도감</h2>
           <button class="btn-close-deck" id="btn-close-deck">✕ 닫기</button>
         </div>
 

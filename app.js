@@ -199,6 +199,7 @@ class CreditRogueGame {
     this.elSoundBtn.addEventListener('click', () => {
       const enabled = window.soundEngine.toggle();
       this.elSoundBtn.textContent = enabled ? '🔊' : '🔇';
+      this.elSoundBtn.setAttribute('aria-pressed', String(enabled));
     });
 
     // 오리엔테이션 대화 진행 버튼
