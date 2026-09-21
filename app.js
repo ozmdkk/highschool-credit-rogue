@@ -914,6 +914,8 @@ class CreditRogueGame {
       btnElem.style.borderColor = '#22c55e';
       window.soundEngine.playCorrect();
 
+      this.quizExpBox.classList.remove('is-wrong');
+      this.quizExpBox.classList.add('is-correct');
       this.quizExpBox.style.display = 'block';
       this.quizExpBox.innerHTML = usedAutoCorrect
         ? `<strong>🔮 족집게 예상문제집 발동!</strong> 자동으로 정답 처리되었습니다!<br>${quiz.exp}`
@@ -931,15 +933,23 @@ class CreditRogueGame {
       const correctDisplayIdx = order.indexOf(quiz.ans);
       if (allBtns[correctDisplayIdx]) {
         allBtns[correctDisplayIdx].style.borderColor = '#22c55e';
+        allBtns[correctDisplayIdx].style.background = 'rgba(34, 197, 94, 0.15)';
+        const markSpan = document.createElement('span');
+        markSpan.className = 'quiz-correct-mark';
+        markSpan.textContent = '✓ 정답';
+        allBtns[correctDisplayIdx].appendChild(markSpan);
       }
 
+      this.quizExpBox.classList.remove('is-correct');
+      this.quizExpBox.classList.add('is-wrong');
       this.quizExpBox.style.display = 'block';
-      this.quizExpBox.innerHTML = `<strong>❌ 아쉽게 틀렸습니다!</strong><br>${quiz.exp}`;
+      this.quizExpBox.innerHTML = `<strong>❌ 아쉽게 틀렸습니다! 정답은 "${quiz.options[quiz.ans]}"입니다.</strong><br>${quiz.exp}`;
 
+      // 오답 해설을 충분히 읽을 수 있도록 정답 처리 때보다 더 오래 보여준 뒤 반격으로 넘어간다.
       setTimeout(() => {
         this.quizOverlay.classList.remove('active');
         this.handlePlayerAttackFail();
-      }, 1800);
+      }, 2600);
     }
   }
 
