@@ -274,6 +274,19 @@ class CreditRogueGame {
       window.soundEngine.playClick();
       this.noticeOverlay.classList.remove('active');
     });
+
+    // 퀴즈 보기에 표시되는 1~4 숫자와 매칭되는 키보드 단축키
+    document.addEventListener('keydown', (e) => {
+      if (!this.quizOverlay.classList.contains('active')) return;
+      const num = parseInt(e.key, 10);
+      if (!(num >= 1 && num <= 4)) return;
+
+      const btns = this.quizOptionsList.querySelectorAll('.quiz-option-btn');
+      const btn = btns[num - 1];
+      if (btn && !btn.disabled) {
+        btn.click();
+      }
+    });
   }
 
   // 뷰 전환 (철저한 단일 뷰 활성화)
