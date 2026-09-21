@@ -1,0 +1,25 @@
+{
+  "name": "고교학점제 로그 (High School Credit PokéRogue)",
+  "short_name": "고교학점제 로그",
+  "description": "2022 개정 교육과정 & 고교학점제 192학점 이수 체험형 턴제 웹 RPG",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#060911",
+  "theme_color": "#060911",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
