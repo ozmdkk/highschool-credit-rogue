@@ -45,6 +45,7 @@ class CreditRogueGame {
       currentEnemyHp: 240,
       maxEnemyHp: 240,
       currentQuiz: null,
+      quizQueue: null, // 현재 몬스터전 동안 아직 안 낸 퀴즈 목록 (다 소진되면 재셔플)
       isBossWave: false,
       isEnraged: false,
       
@@ -635,8 +636,7 @@ class CreditRogueGame {
     this.state.maxEnemyHp = subject.hp;
     this.state.currentEnemyHp = subject.hp;
 
-    const qIndex = Math.floor(Math.random() * subject.quizzes.length);
-    this.state.currentQuiz = subject.quizzes[qIndex];
+    this.state.quizQueue = null; // 새 몬스터 조우 = 퀴즈 큐 초기화
 
     this.switchView('battle');
     this.loadEnemySprite(subject);
@@ -653,8 +653,7 @@ class CreditRogueGame {
     this.state.maxEnemyHp = boss.hp;
     this.state.currentEnemyHp = boss.hp;
 
-    const qIndex = Math.floor(Math.random() * boss.quizzes.length);
-    this.state.currentQuiz = boss.quizzes[qIndex];
+    this.state.quizQueue = null; // 새 몬스터 조우 = 퀴즈 큐 초기화
 
     window.soundEngine.playBossEncounter();
     this.switchView('battle');
@@ -806,8 +805,36 @@ class CreditRogueGame {
     this.noticeOverlay.classList.add('active');
   }
 
+  // 배열 셔플 (Fisher-Yates)
+  shuffleArray(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // 같은 몬스터를 상대하는 동안 퀴즈 풀을 다 보여줄 때까지 중복 없이 뽑고,
+  // 다 소진되면 재셔플하되 직전 퀴즈가 바로 다시 나오지는 않게 한다.
+  pickNextQuiz(pool) {
+    if (!this.state.quizQueue || this.state.quizQueue.length === 0) {
+      const nextBatch = this.shuffleArray(pool);
+      if (pool.length > 1 && this.state.currentQuiz && nextBatch[0] === this.state.currentQuiz) {
+        [nextBatch[0], nextBatch[1]] = [nextBatch[1], nextBatch[0]];
+      }
+      this.state.quizQueue = nextBatch;
+    }
+    this.state.currentQuiz = this.state.quizQueue.shift();
+  }
+
   // 9. 퀴즈 모달 오픈
   openQuizModal() {
+    const pool = this.state.currentEnemy && this.state.currentEnemy.quizzes;
+    if (pool && pool.length) {
+      this.pickNextQuiz(pool);
+    }
+
     const quiz = this.state.currentQuiz;
     if (!quiz) return;
 
