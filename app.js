@@ -298,6 +298,16 @@ class CreditRogueGame {
         this.views[key].classList.remove('active');
       }
     });
+
+    if (viewName === 'battle') {
+      if (this.state.isBossWave) {
+        window.soundEngine.startBossBgm();
+      } else {
+        window.soundEngine.startBattleBgm();
+      }
+    } else {
+      window.soundEngine.stopBgm();
+    }
   }
 
   // 오리엔테이션 대화 진행

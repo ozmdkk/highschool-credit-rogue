@@ -3,6 +3,9 @@ class SoundEngine {
   constructor() {
     this.ctx = null;
     this.enabled = true;
+    this.bgmTimer = null;
+    this.bgmGain = null;
+    this.bgmType = null; // 'battle' | 'boss', 음소거 해제 시 이어서 재생하기 위해 기억
   }
 
   init() {
@@ -19,7 +22,72 @@ class SoundEngine {
 
   toggle() {
     this.enabled = !this.enabled;
+    if (!this.enabled) {
+      this.stopBgm(true);
+    } else if (this.bgmType === 'battle') {
+      this.startBattleBgm();
+    } else if (this.bgmType === 'boss') {
+      this.startBossBgm();
+    }
     return this.enabled;
+  }
+
+  // 루프 BGM 정지. keepType이 true면 다음 음소거 해제 시 이어서 재생할 수 있도록 bgmType은 유지한다.
+  stopBgm(keepType = false) {
+    if (this.bgmTimer) {
+      clearTimeout(this.bgmTimer);
+      this.bgmTimer = null;
+    }
+    this.bgmGain = null;
+    if (!keepType) this.bgmType = null;
+  }
+
+  // 저볼륨 루프 배경음 재생 (짧은 멜로디 패턴을 계속 반복)
+  playBgmLoop(pattern) {
+    this.stopBgm(true);
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const gain = this.ctx.createGain();
+    gain.gain.value = 0.05;
+    gain.connect(this.ctx.destination);
+    this.bgmGain = gain;
+
+    let i = 0;
+    const playStep = () => {
+      if (this.bgmGain !== gain) return; // 그 사이 정지/교체되었으면 중단
+      const note = pattern[i % pattern.length];
+      try {
+        const osc = this.ctx.createOscillator();
+        osc.type = note.type || 'triangle';
+        osc.frequency.setValueAtTime(note.f, this.ctx.currentTime);
+        osc.connect(gain);
+        osc.start();
+        osc.stop(this.ctx.currentTime + note.d * 0.9);
+      } catch (e) {}
+      i++;
+      this.bgmTimer = setTimeout(playStep, note.d * 1000);
+    };
+    playStep();
+  }
+
+  // 평시 전투 BGM (차분한 루프)
+  startBattleBgm() {
+    this.bgmType = 'battle';
+    this.playBgmLoop([
+      { f: 392.00, d: 0.3 }, { f: 440.00, d: 0.3 }, { f: 493.88, d: 0.3 }, { f: 440.00, d: 0.3 },
+      { f: 392.00, d: 0.3 }, { f: 349.23, d: 0.3 }, { f: 392.00, d: 0.6 }
+    ]);
+  }
+
+  // 보스전 BGM (긴장감 있는 단조 루프)
+  startBossBgm() {
+    this.bgmType = 'boss';
+    this.playBgmLoop([
+      { f: 220.00, d: 0.2 }, { f: 233.08, d: 0.2 }, { f: 220.00, d: 0.2 }, { f: 196.00, d: 0.2 },
+      { f: 174.61, d: 0.2 }, { f: 196.00, d: 0.2 }, { f: 220.00, d: 0.4 }
+    ]);
   }
 
   // 기본 톤 재생 유틸
